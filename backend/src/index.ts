@@ -15,7 +15,7 @@ app.set('view engine', 'ejs')
 
 try {
     AppDataSource.initialize().then(()=>{
-        console.log("Data Source has been initialized!")
+        console.log("DataSource chay. !")
     }).catch((err)=>{
         console.error(err)
     })
