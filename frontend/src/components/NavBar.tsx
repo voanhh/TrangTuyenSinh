@@ -33,7 +33,7 @@ const Navbar: React.FC = () => {
                     </li>
 
                     <li><a href="/#blog">Blog</a></li>
-                    <li><a href="/#contact">Liên hệ</a></li>
+                    <li><Link to="/lien-he">Liên hệ</Link></li>
                 </ul>
                 <button className="btn btn-primary">Đăng ký học ngay</button>
             </div>

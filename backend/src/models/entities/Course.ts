@@ -85,3 +85,4 @@ export class Course {
   @OneToMany(() => Registration, (registration) => registration.course)
   registrations: Registration[];
 }
+

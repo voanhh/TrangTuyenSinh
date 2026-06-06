@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import CourseDetailPage from './pages/CourseDetailPage'; // Import trang mới
+import ContactPage from './pages/ContactPage';
 import './styles/LandingPage.css';
 
 function App() {
@@ -14,6 +15,9 @@ function App() {
 
         {/* Đường dẫn trang chi tiết khóa học */}
         <Route path="/khoa-hoc/:id" element={<CourseDetailPage />} />
+
+        {/* Trang liên hệ */}
+        <Route path="/lien-he" element={<ContactPage />} />
       </Routes>
     </BrowserRouter>
   );
