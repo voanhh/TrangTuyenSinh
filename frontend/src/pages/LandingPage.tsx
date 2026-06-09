@@ -2,7 +2,7 @@
 
 import React from 'react';
 import '../styles/LandingPage.css'; // Import file CSS đã thiết kế
-
+import '../index.css';
 import Navbar from '../components/NavBar';
 import Hero from '../components/Hero';
 import About from '../components/About';
