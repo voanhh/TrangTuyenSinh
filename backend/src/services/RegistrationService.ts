@@ -1,0 +1,58 @@
+import { AppDataSource } from '../models/DataSource';
+import { Registration } from '../models/entities/Registration';
+
+export class RegistrationService {
+    private static registrationRepository = AppDataSource.getRepository(Registration);
+
+    static async getAllRegistrations() {
+        return this.registrationRepository.find({
+            relations: { user: true, course: true },
+        });
+    }
+
+    static async getRegistrationById(id: number) {
+        return this.registrationRepository.findOne({
+            where: { id },
+            relations: { user: true, course: true },
+        });
+    }
+
+    static async createRegistration(registrationData: any) {
+        const newRegistration = new Registration();
+        newRegistration.userId = registrationData.userId;
+        newRegistration.courseId = registrationData.courseId;
+        newRegistration.contactName = registrationData.contactName;
+        newRegistration.contactEmail = registrationData.contactEmail;
+        newRegistration.contactPhone = registrationData.contactPhone;
+        newRegistration.note = registrationData.note || null;
+        newRegistration.status = registrationData.status || 'pending';
+        newRegistration.handledBy = registrationData.handledBy || null;
+        newRegistration.contactedAt = registrationData.contactedAt || null;
+        return this.registrationRepository.save(newRegistration);
+    }
+
+    static async updateRegistration(id: number, registrationData: any) {
+        const registration = await this.registrationRepository.findOneBy({ id });
+        if (!registration) {
+            throw new Error('Registration not found');
+        }
+        registration.userId = registrationData.userId ?? registration.userId;
+        registration.courseId = registrationData.courseId ?? registration.courseId;
+        registration.contactName = registrationData.contactName ?? registration.contactName;
+        registration.contactEmail = registrationData.contactEmail ?? registration.contactEmail;
+        registration.contactPhone = registrationData.contactPhone ?? registration.contactPhone;
+        registration.note = registrationData.note ?? registration.note;
+        registration.status = registrationData.status ?? registration.status;
+        registration.handledBy = registrationData.handledBy ?? registration.handledBy;
+        registration.contactedAt = registrationData.contactedAt ?? registration.contactedAt;
+        return this.registrationRepository.save(registration);
+    }
+
+    static async deleteRegistration(id: number) {
+        const registration = await this.registrationRepository.findOneBy({ id });
+        if (!registration) {
+            throw new Error('Registration not found');
+        }
+        return this.registrationRepository.remove(registration);
+    }
+}
