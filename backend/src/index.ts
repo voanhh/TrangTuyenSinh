@@ -8,6 +8,7 @@ import userRouter from './routers/user.router';
 import teacherRouter from './routers/teacher.router';
 import courseRouter from './routers/course.router';
 import syllabusRouter from './routers/syllabus.router';
+import registrationRouter from './routers/registration.router';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -27,6 +28,7 @@ app.use("/api", userRouter)
 app.use("/api", teacherRouter)
 app.use("/api", courseRouter)
 app.use("/api", syllabusRouter)
+app.use("/api", registrationRouter)
 
 try {
     AppDataSource.initialize().then(()=>{
