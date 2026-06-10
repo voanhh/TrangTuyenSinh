@@ -41,6 +41,15 @@ export class User {
   })
   role: UserRole;
 
+  @Column({ default: false })
+  isVerified: boolean;
+
+  @Column({ type: "varchar", length: 6, nullable: true })
+  otp: string;
+
+  @Column({ type: "timestamp", nullable: true })
+  otpExpiresAt: Date;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

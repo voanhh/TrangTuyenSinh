@@ -9,4 +9,7 @@ router.post("/register", AuthController.register);
 router.post("/login", AuthController.login);
 // Làm mới token
 router.get('/refresh', AuthController.refreshToken);
+// Xác thực email
+router.post("/verify-otp", AuthController.verifyOtp);
+
 export default router;
