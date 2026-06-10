@@ -58,6 +58,20 @@ INSERT INTO course_syllabus (course_id, order_index, title, description) VALUES
 (5, 4, 'Authentication & Security', 'JWT, OAuth, Security Best Practices'),
 (5, 5, 'API Development', 'RESTful API, GraphQL basics');
 
+-- ========================================
+-- INSERT DATA INTO registrations TABLE
+-- ========================================
+INSERT INTO registrations (user_id, course_id, contact_name, contact_email, contact_phone, note, status, handled_by, registered_at, contacted_at) VALUES
+(1, '1', 'Nguyễn Văn A', 'nguyena@gmail.com', '0912345678', 'Quan tâm về React advanced', 'confirmed', 'admin1', NOW(), NOW()),
+(2, '1', 'Trần Thị B', 'tranthib@gmail.com', '0923456789', NULL, 'pending', NULL, NOW(), NULL),
+(3, '2', 'Lê Văn C', 'levanc@gmail.com', '0934567890', 'Muốn học SQL optimization', 'contacted', 'admin1', NOW(), DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, '3', 'Nguyễn Văn A', 'nguyena@gmail.com', '0912345678', 'Thích UI/UX Design', 'confirmed', 'admin2', NOW(), NOW()),
+(2, '5', 'Trần Thị B', 'tranthib@gmail.com', '0923456789', 'Học Node.js backend', 'pending', NULL, NOW(), NULL),
+(3, '4', 'Lê Văn C', 'levanc@gmail.com', '0934567890', NULL, 'confirmed', 'admin1', NOW(), NOW()),
+(NULL, '1', 'Phạm Văn E', 'phamvane@gmail.com', '0956789012', 'Khách hàng mới', 'pending', NULL, NOW(), NULL),
+(1, '2', 'Nguyễn Văn A', 'nguyena@gmail.com', '0912345678', 'Cập nhật thông tin', 'confirmed', 'admin2', NOW(), NOW()),
+(2, '3', 'Trần Thị B', 'tranthib@gmail.com', '0923456789', 'Rất quan tâm khóa này', 'contacted', 'admin1', NOW(), DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(NULL, '5', 'Hoàng Thị F', 'hoangthif@gmail.com', '0967890123', NULL, 'cancelled', 'admin2', DATE_SUB(NOW(), INTERVAL 10 DAY), NULL);
 
 -- ========================================
 -- NOTES:
@@ -66,3 +80,5 @@ INSERT INTO course_syllabus (course_id, order_index, title, description) VALUES
 -- 2. Thay thế NOW() bằng timestamp cụ thể nếu cần
 -- 3. Kiểm tra lại các khóa ngoài (foreign keys) trước khi INSERT
 -- 4. Thực hiện các câu lệnh tuần tự theo thứ tự phụ thuộc
+-- 5. Registrations: user_id có thể NULL (khách hàng chưa đăng ký tài khoản), course_id tham chiếu đến course table
+-- 6. Status có các giá trị: pending, contacted, confirmed, cancelled
