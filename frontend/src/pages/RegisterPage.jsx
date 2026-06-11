@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
-    name: '', 
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -12,7 +12,7 @@ const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // States xử lý logic
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,8 +24,8 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); 
-    
+    setErrorMessage('');
+
     // 1. Validate Mật khẩu (Tối thiểu 6 ký tự, 1 chữ hoa, 1 ký tự đặc biệt)
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
     if (!passwordRegex.test(formData.password)) {
@@ -44,14 +44,14 @@ const RegisterPage = () => {
     try {
       // Sử dụng import.meta.env.VITE_API_URL để lấy đường dẫn động
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-        name: formData.name, 
+        name: formData.name,
         email: formData.email,
         password: formData.password
       });
 
       alert(response.data.message || 'Tạo tài khoản thành công!');
       navigate('/login'); // Chuyển hướng sang trang đăng nhập
-      
+
     } catch (error) {
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message);
@@ -67,7 +67,7 @@ const RegisterPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-100 p-4 font-sans text-slate-800">
       {/* Khối Glassmorphism */}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/50 overflow-hidden max-w-md w-full p-8 transition-all duration-500 hover:shadow-[0_8px_30px_rgb(249,115,22,0.15)]">
-        
+
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-orange-400 mb-2">
@@ -180,8 +180,8 @@ const RegisterPage = () => {
             type="submit"
             disabled={isLoading}
             className={`w-full py-3.5 px-4 text-white font-bold rounded-xl shadow-lg transform transition-all duration-200 mt-2 cursor-pointer 
-              ${isLoading 
-                ? 'bg-orange-400 cursor-not-allowed' 
+              ${isLoading
+                ? 'bg-orange-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-orange-500/30 hover:-translate-y-0.5 active:translate-y-0'}`}
           >
             {isLoading ? 'Signing Up...' : 'Sign Up'}
