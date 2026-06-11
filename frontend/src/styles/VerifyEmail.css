@@ -1,0 +1,143 @@
+/* =========================================
+   VERIFY EMAIL
+   ========================================= */
+.verify-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #fff7ed, #ffffff, #ffedd5); /* Nền cam nhạt */
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.verify-card {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 30px rgba(249, 115, 22, 0.12); /* Bóng đổ màu cam nhẹ */
+  border: 1px solid rgba(249, 115, 22, 0.1);
+  max-width: 28rem;
+  width: 100%;
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.verify-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background-color: #fff7ed; /* Nền icon cam rất nhạt */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  border: 2px solid #fdba74;
+}
+
+.verify-icon-wrapper svg {
+  width: 32px;
+  height: 32px;
+  color: #ea580c; /* Màu cam đậm */
+}
+
+.verify-title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(to right, #ea580c, #f97316); /* Chữ cam gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.verify-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.verify-subtitle strong {
+  color: #ea580c;
+}
+
+.otp-inputs-container {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.otp-input-box {
+  width: 50px;
+  height: 60px;
+  background-color: #f9fafb; 
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  transition: all 0.2s;
+}
+
+.otp-input-box:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); /* Focus viền cam */
+}
+
+.verify-submit-btn {
+  width: 100%;
+  padding: 1rem;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
+  background: linear-gradient(to right, #f97316, #ea580c); 
+}
+
+.verify-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(to right, #ea580c, #c2410c);
+  transform: translateY(-2px);
+}
+
+.verify-submit-btn:disabled {
+  background: #fbba74;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.verify-back-btn {
+  margin-top: 1.5rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.verify-back-btn:hover {
+  color: #ea580c;
+}
+
+.error-alert {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-size: 0.875rem;
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #fee2e2;
+}

@@ -6,8 +6,8 @@ import CourseDetailPage from './pages/CourseDetailPage'; // Import trang mới
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
+import VerifyEmail from './pages/VerifyEmail';
 import './styles/LandingPage.css';
-import './index.css';
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +25,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/* Trang liên hệ */}
         <Route path="/lien-he" element={<ContactPage />} />
+        {/* Trang xác thực email */}
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   );
