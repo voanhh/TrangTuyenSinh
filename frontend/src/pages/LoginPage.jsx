@@ -11,9 +11,9 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  
-  const navigate = useNavigate();
 
+  const navigate = useNavigate(); // khai bao bien navigate
+  // kiem tra neu da co token thi chuyen huong ve trang chu
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -30,18 +30,20 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); 
+    setErrorMessage('');
     setIsLoading(true);
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         email: formData.email,
         password: formData.password
-      }, {
-        withCredentials: true 
-      });
-      localStorage.setItem('accessToken', response.data.accessToken); 
-      localStorage.setItem('user', JSON.stringify(response.data.user)); 
+      },
+        {
+          withCredentials: true // Cho phép gửi cookie từ server về client
+        }
+      );
+      localStorage.setItem('accessToken', response.data.accessToken); // Lưu token vào localStorage
+      localStorage.setItem('user', JSON.stringify(response.data.user)); // Lưu thông tin user vào localStorage
       alert(response.data.message || 'Đăng nhập thành công!');
       navigate("/");
     } catch (error) {

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/AuthService";
 
 export class AuthController {
-  
+
   // ==============================
   // 1. API REGISTER
   // ==============================
@@ -71,7 +71,7 @@ export class AuthController {
   static async refreshToken(req: Request, res: Response) {
     try {
       const refreshToken = req.cookies.refreshToken;
-      
+
       if (!refreshToken) {
         return res.status(401).json({ message: "Chưa xác thực. Vui lòng đăng nhập lại!" });
       }
