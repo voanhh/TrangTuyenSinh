@@ -26,7 +26,6 @@ const CourseDetailPage: React.FC = () => {
             return;
         }
 
-
         try {
             setIsLoading(true);
             await registrationApi.registerForCourse(formData);
