@@ -33,6 +33,14 @@ export interface Course {
     syllabus: Syllabus[];
 }
 
+export interface RegistrationForm {
+    courseId: number;
+    contactName: string;
+    contactEmail: string;
+    contactPhone: string;
+    note: string;
+}
+
 export interface Registration {
     id: number;
     userId: number;
@@ -118,7 +126,7 @@ export const registrationApi = {
     getAllRegistrations: async (): Promise<Registration[]> => {
         const response = await apiClient.get('/registrations');
         return response.data.data;
-    }
+    },
     
     registerForCourse: async (userData: RegistrationForm): Promise<void> => {
         await apiClient.post(`/registrations`, userData );
