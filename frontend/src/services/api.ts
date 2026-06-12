@@ -119,6 +119,10 @@ export const registrationApi = {
         const response = await apiClient.get('/registrations');
         return response.data.data;
     }
+    
+    registerForCourse: async (userData: RegistrationForm): Promise<void> => {
+        await apiClient.post(`/registrations`, userData );
+    }
 };
 
 export const uploadApi = {
