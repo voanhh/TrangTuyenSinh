@@ -307,3 +307,182 @@
 .table-img-round {
     border-radius: 50%;
 }
+
+/* --- ADMIN MODAL (POPUP) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: #fff;
+    width: 550px;
+    max-width: 95%;
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    /* Giới hạn chiều cao tối đa của popup */
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--admin-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    /* Không cho header bị bóp méo */
+}
+
+/* THÊM MỚI ĐOẠN NÀY ĐỂ ÉP FORM VÀO KHUÔN FLEXBOX */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1;
+    /* Chiếm toàn bộ không gian còn lại của modal-content */
+}
+
+/* CẬP NHẬT LẠI MODAL-BODY */
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    /* Hiển thị thanh cuộn dọc khi nội dung dài */
+    flex: 1;
+}
+
+/* Tùy chỉnh thanh cuộn cho mượt và đẹp hơn (Tùy chọn) */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--admin-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+    /* Giữ footer luôn cố định ở dưới cùng */
+    background-color: #f8fafc;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* --- FORMAT CHO FORM NHẬP LIỆU --- */
+.admin-form-group {
+    margin-bottom: 16px;
+}
+
+.admin-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.admin-form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--admin-border);
+    border-radius: 6px;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    /* Đảm bảo padding không làm tràn width */
+}
+
+.admin-form-control:focus {
+    border-color: var(--admin-primary);
+}
+
+/* --- ADMIN IMAGE UPLOAD --- */
+.image-upload-wrapper {
+    position: relative;
+    border: 2px dashed var(--admin-border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+}
+
+.image-upload-wrapper:hover {
+    border-color: var(--admin-primary);
+    background-color: #eff6ff;
+}
+
+.image-upload-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.image-upload-preview {
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 6px;
+    object-fit: contain;
+    z-index: 5;
+}
+
+.image-upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #64748b;
+    gap: 10px;
+}
+
+.image-upload-placeholder span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.upload-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--admin-primary);
+    gap: 10px;
+}
+
+/* Hiệu ứng xoay tròn cho icon loading */
+.spin-anim {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}

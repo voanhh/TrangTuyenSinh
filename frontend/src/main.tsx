@@ -9,8 +9,10 @@ import ContactPage from './pages/ContactPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminTeachers from './pages/admin/AdminTeachers';
+import AdminCourses from './pages/admin/AdminCourses';
+import AdminRegistrations from './pages/admin/AdminRegistrations';
+import VerifyEmail from './pages/VerifyEmail';
 import './styles/LandingPage.css';
-import './index.css';
 function App() {
   return (
     <BrowserRouter>
@@ -37,11 +39,18 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
 
           <Route path="teachers" element={<AdminTeachers />} />
+
+          <Route path="courses" element={<AdminCourses />} />
+
+          <Route path="registrations" element={<AdminRegistrations />} />
+
           {/* Sau này bạn sẽ tạo thêm:
       <Route path="courses" element={<AdminCourses />} />
       <Route path="teachers" element={<AdminTeachers />} />
       */}
         </Route>
+        {/* Trang xác thực email */}
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   );
