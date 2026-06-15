@@ -7,10 +7,12 @@ import ScratchCoursePage from './pages/ScratchCoursePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
-import VerifyEmail from './pages/VerifyEmail';
-import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminTeachers from './pages/admin/AdminTeachers';
+import AdminCourses from './pages/admin/AdminCourses';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
+import VerifyEmail from './pages/VerifyEmail';
 import './styles/LandingPage.css';
 function App() {
   return (
@@ -21,7 +23,7 @@ function App() {
 
         {/* Trang khóa học Scratch (đặt trước route động để ưu tiên match) */}
         <Route path="/khoa-hoc/scratch-tu-duy" element={<ScratchCoursePage />} />
-        
+
         {/* Đường dẫn trang chi tiết khóa học chung */}
         <Route path="/khoa-hoc/:id" element={<CourseDetailPage />} />
 
@@ -32,6 +34,25 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/* Trang liên hệ */}
         <Route path="/lien-he" element={<ContactPage />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          {/* Tự động điều hướng /admin sang /admin/dashboard (Tùy chọn) */}
+          <Route index element={<AdminDashboard />} />
+
+          {/* Các trang con nằm trong khung Layout */}
+          <Route path="dashboard" element={<AdminDashboard />} />
+
+          <Route path="teachers" element={<AdminTeachers />} />
+
+          <Route path="courses" element={<AdminCourses />} />
+
+          <Route path="registrations" element={<AdminRegistrations />} />
+
+          {/* Sau này bạn sẽ tạo thêm:
+      <Route path="courses" element={<AdminCourses />} />
+      <Route path="teachers" element={<AdminTeachers />} />
+      */}
+        </Route>
         {/* Trang xác thực email */}
         <Route path="/verify-email" element={<VerifyEmail />} />
 

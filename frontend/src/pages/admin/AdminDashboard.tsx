@@ -1,86 +1,80 @@
 import React from 'react';
-import { mockAdminData } from '../../data/mockAdminData';
-import { Users, BookOpen, DollarSign, UserPlus, ArrowUpRight } from 'lucide-react';
+import { Users, GraduationCap, DollarSign, Calendar } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
-    const { stats, registrations } = mockAdminData;
-
-    const statCards = [
-        { title: 'Tổng Học Viên', value: stats.totalStudents, icon: <Users size={24} className="text-blue-600" />, bg: 'bg-blue-100', trend: '+12%' },
-        { title: 'Đăng Ký Mới', value: stats.newRegistrations, icon: <UserPlus size={24} className="text-green-600" />, bg: 'bg-green-100', trend: '+5%' },
-        { title: 'Khóa Học Active', value: stats.activeCourses, icon: <BookOpen size={24} className="text-purple-600" />, bg: 'bg-purple-100', trend: '0%' },
-        { title: 'Dự Kiến Doanh Thu', value: stats.estimatedRevenue, icon: <DollarSign size={24} className="text-yellow-600" />, bg: 'bg-yellow-100', trend: '+18%' },
-    ];
-
     return (
-        <div className="space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-800">Tổng quan Dashboard</h1>
-                <p className="text-gray-500 mt-1">Chào mừng trở lại! Dưới đây là thông tin mới nhất hôm nay.</p>
-            </div>
+        <div>
+            <h2 className="admin-page-title">Tổng quan hệ thống</h2>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {statCards.map((card, idx) => (
-                    <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="text-sm font-medium text-gray-500 mb-1">{card.title}</p>
-                                <h3 className="text-2xl font-bold text-gray-800">{card.value}</h3>
-                            </div>
-                            <div className={`p-3 rounded-lg ${card.bg}`}>
-                                {card.icon}
-                            </div>
-                        </div>
-                        <div className="mt-4 flex items-center text-sm">
-                            <span className="flex items-center text-green-500 font-medium">
-                                <ArrowUpRight size={16} className="mr-1" />
-                                {card.trend}
-                            </span>
-                            <span className="text-gray-400 ml-2">so với tháng trước</span>
-                        </div>
+            {/* 4 Thẻ Thống Kê */}
+            <div className="stats-container">
+                <div className="stat-card">
+                    <div className="stat-icon"><Users size={24} /></div>
+                    <div className="stat-info">
+                        <h4>Tổng Học Viên</h4>
+                        <div className="stat-value">1,248</div>
                     </div>
-                ))}
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon"><GraduationCap size={24} /></div>
+                    <div className="stat-info">
+                        <h4>Khóa Học Đang Mở</h4>
+                        <div className="stat-value">12</div>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon"><DollarSign size={24} /></div>
+                    <div className="stat-info">
+                        <h4>Doanh Thu Tháng Này</h4>
+                        <div className="stat-value">145M</div>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon" style={{ backgroundColor: '#fef3c7', color: '#d97706' }}><Calendar size={24} /></div>
+                    <div className="stat-info">
+                        <h4>Đơn Đăng Ký Chờ Xử Lý</h4>
+                        <div className="stat-value">8</div>
+                    </div>
+                </div>
             </div>
 
-            {/* Recent Registrations Table Preview */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                    <h2 className="text-lg font-bold text-gray-800">Đăng ký tư vấn mới nhất</h2>
-                    <a href="/admin/registrations" className="text-sm font-medium text-blue-600 hover:text-blue-800">Xem tất cả</a>
+            {/* Bảng Dữ Liệu: Đơn đăng ký mới nhất */}
+            <div className="table-card">
+                <div className="table-header">
+                    <h3>Đơn Đăng Ký Mới Nhất</h3>
+                    <button className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>Xem tất cả</button>
                 </div>
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-gray-50 text-gray-500 text-sm uppercase tracking-wider">
-                                <th className="py-4 px-6 font-medium">Họ tên PH / Học viên</th>
-                                <th className="py-4 px-6 font-medium">Số điện thoại</th>
-                                <th className="py-4 px-6 font-medium">Khóa học quan tâm</th>
-                                <th className="py-4 px-6 font-medium">Ngày đăng ký</th>
-                                <th className="py-4 px-6 font-medium">Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-100">
-                            {registrations.slice(0, 4).map((reg) => (
-                                <tr key={reg.id} className="hover:bg-gray-50 transition-colors">
-                                    <td className="py-4 px-6">
-                                        <p className="font-semibold text-gray-800">{reg.parentName}</p>
-                                        <p className="text-sm text-gray-500">{reg.studentName}</p>
-                                    </td>
-                                    <td className="py-4 px-6 text-gray-700">{reg.phone}</td>
-                                    <td className="py-4 px-6 text-gray-700">{reg.course}</td>
-                                    <td className="py-4 px-6 text-gray-500">{reg.date}</td>
-                                    <td className="py-4 px-6">
-                                        {reg.status === 'pending' && <span className="px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">Chờ xử lý</span>}
-                                        {reg.status === 'contacted' && <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">Đã gọi điện</span>}
-                                        {reg.status === 'success' && <span className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">Thành công</span>}
-                                        {reg.status === 'rejected' && <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">Từ chối</span>}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+
+                <table className="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ và Tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Khóa học quan tâm</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1042</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>0901234567</td>
+                            <td>Sáng Tạo Web HTML/CSS/JS</td>
+                            <td><span className="status-badge status-pending">Chờ tư vấn</span></td>
+                            <td><a href="#" style={{ color: 'var(--admin-primary)' }}>Chi tiết</a></td>
+                        </tr>
+                        <tr>
+                            <td>#1041</td>
+                            <td>Trần Thị B</td>
+                            <td>0987654321</td>
+                            <td>Tư Duy Lập Trình Với Scratch</td>
+                            <td><span className="status-badge status-paid">Đã thanh toán</span></td>
+                            <td><a href="#" style={{ color: 'var(--admin-primary)' }}>Chi tiết</a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     );
