@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './models/DataSource';
-import authRoutes from './routers/authRoutes';
+import authRouter from './routers/auth.router';
 import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import userRouter from './routers/user.router';
@@ -10,7 +10,6 @@ import courseRouter from './routers/course.router';
 import syllabusRouter from './routers/syllabus.router';
 import registrationRouter from './routers/registration.router';
 import postRouter from './routers/post.router';
-
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,11 +20,11 @@ app.use(cors({
 }));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use("/api/auth", authRoutes) // Đăng ký route cho auth
 app.use(express.static('public'))
 app.use(cookieParser());
 app.set('view engine', 'ejs')
 
+app.use("/api/auth", authRouter)
 app.use("/api", postRouter)
 app.use("/api", userRouter)
 app.use("/api", teacherRouter)
@@ -41,6 +40,7 @@ try {
     })
 } catch (error) { console.error("err:", error) }
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+app.listen(port, () => {{
+    console.log(`server is running on port ${port}`);
+
+}});

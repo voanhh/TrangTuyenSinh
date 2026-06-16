@@ -9,7 +9,7 @@ export class AuthService {
 
   // Logic Đăng ký
   static async registerUser(name: string, email: string, password: string) {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>]).{6,}$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#%^&*(),.?":{}|<>]).{6,}$/;
     if (!passwordRegex.test(password)) {
       throw new Error("Mật khẩu phải tối thiểu 6 ký tự, gồm chữ hoa và ký tự đặc biệt!");
     }

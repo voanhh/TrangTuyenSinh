@@ -8,10 +8,9 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Teacher } from './Teacher';
 import { CourseSyllabus } from './CourseSyllabus';
 import { Registration } from './Registration';
-
+import { Teacher} from './Teacher';
 export enum CourseFormat {
   ONLINE = 'online',
   OFFLINE = 'offline',
@@ -72,9 +71,9 @@ export class Course {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
+  
   @ManyToOne(() => Teacher, (teacher) => teacher.courses)
-  @JoinColumn({ name: 'teacher_id' })
+  @JoinColumn({ name : 'teacher_id'})
   teacher: Teacher;
 
   @OneToMany(() => CourseSyllabus, (syllabus) => syllabus.course, {

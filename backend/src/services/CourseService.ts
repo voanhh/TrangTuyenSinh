@@ -4,9 +4,9 @@ import { Course } from "../models/entities/Course";
 export class CourseService {
     private static courseRepository = AppDataSource.getRepository(Course);
 
-    static async getAllCourses() {
+    static async getAllCourses(){
         return this.courseRepository.find({
-            relations: {registrations: true, teacher: true, syllabus: true},
+            relations: {registrations: true, teacher: true, syllabus: true}
         });
     }
         
