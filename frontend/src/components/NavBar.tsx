@@ -84,7 +84,7 @@ const Navbar: React.FC = () => {
                         </ul>
                     </li>
 
-                    <li><a href="/#blog">Blog</a></li>
+                    <li><Link to="/posts">Tin tức</Link></li>
                     <li><Link to="/lien-he">Liên hệ</Link></li>
                 </ul>
 
