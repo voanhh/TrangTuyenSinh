@@ -25,7 +25,7 @@ export class PostController {
 
   // GET /posts/:slug — chi tiết bài viết theo slug (dành cho frontend)
   static async getBySlug(request: Request, response: Response) {
-    const { slug } = request.params.slug as any;
+    const slug = request.params.slug as string;
     try {
       const post = await PostService.getBySlug(slug);
       if (!post) {
@@ -33,6 +33,7 @@ export class PostController {
       }
       return response.json(successHandler(200, 'Lấy bài viết thành công', post));
     } catch (error) {
+      console.error('Lỗi khi lấy bài viết theo slug:', error);
       return response.json(errorHandler(500, 'Lỗi khi lấy bài viết'));
     }
   }

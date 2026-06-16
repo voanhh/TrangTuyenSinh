@@ -20,11 +20,11 @@ const RegisterPage = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e : React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -50,7 +50,7 @@ const RegisterPage = () => {
 
       navigate('/verify-email', { state: { email: formData.email } });
 
-    } catch (error) {
+    } catch (error : any) {
       if (error.response && error.response.data) {
         setErrorMessage(error.response.data.message);
       } else {
