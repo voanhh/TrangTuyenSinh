@@ -7,12 +7,31 @@ export class PostService {
     return postRepo.find({
       where: { status: PostStatus.PUBLISHED },
       order: { createdAt: 'DESC' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        thumbnailUrl: true,
+        shortDesc: true,
+        authorName: true,
+        createdAt: true,
+      },
     });
   }
 
   static async getAllPost() {
     return postRepo.find({
       order: { createdAt: 'DESC' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        thumbnailUrl: true,
+        shortDesc: true,
+        authorName: true,
+        status: true,
+        createdAt: true,
+      },
     });
   }
 
