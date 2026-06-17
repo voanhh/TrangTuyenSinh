@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import CourseDetailPage from './pages/CourseDetailPage'; // Import trang mới
+import CourseDetailPage from './pages/CourseDetailPage'; 
+import ScratchCoursePage from './pages/ScratchCoursePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ContactPage from './pages/ContactPage';
@@ -11,7 +12,18 @@ import AdminLayout from './pages/admin/AdminLayout';
 import AdminTeachers from './pages/admin/AdminTeachers';
 import AdminCourses from './pages/admin/AdminCourses';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
+import AdminPost from './pages/admin/AdminPost';
 import VerifyEmail from './pages/VerifyEmail';
+import StudentLayout from './layouts/StudentLayout';
+import MyCoursesPage from './pages/student/MyCoursesPage';
+import InstructorLayout from './layouts/InstructorLayout';
+import InstructorClassesPage from './pages/instructor/InstructorClassesPage';
+import InstructorCreateClassPage from './pages/instructor/InstructorCreateClassPage';
+import InstructorDashboardPage from './pages/instructor/InstructorDashboardPage';
+import InstructorStudentsPage from './pages/instructor/InstructorStudentsPage';
+import PostList from './pages/Post/PostList';
+import CreatePost from './pages/admin/CreatePost';
+import PostDetail from './pages/Post/PostDetail';
 import './styles/LandingPage.css';
 function App() {
   return (
@@ -20,7 +32,10 @@ function App() {
         {/* Đường dẫn trang chủ */}
         <Route path="/" element={<LandingPage />} />
 
-        {/* Đường dẫn trang chi tiết khóa học */}
+        {/* Trang khóa học Scratch (đặt trước route động để ưu tiên match) */}
+        <Route path="/khoa-hoc/scratch-tu-duy" element={<ScratchCoursePage />} />
+
+        {/* Đường dẫn trang chi tiết khóa học chung */}
         <Route path="/khoa-hoc/:id" element={<CourseDetailPage />} />
 
         {/* Đường dẫn trang đăng nhập */}
@@ -30,6 +45,11 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/* Trang liên hệ */}
         <Route path="/lien-he" element={<ContactPage />} />
+
+        <Route path="/posts" element={<PostList />} />
+        <Route path="/posts/:slug" element={<PostDetail />} />
+
+        <Route path="/hehe" element={<CreatePost />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           {/* Tự động điều hướng /admin sang /admin/dashboard (Tùy chọn) */}
@@ -44,13 +64,34 @@ function App() {
 
           <Route path="registrations" element={<AdminRegistrations />} />
 
-          {/* Sau này bạn sẽ tạo thêm:
-      <Route path="courses" element={<AdminCourses />} />
-      <Route path="teachers" element={<AdminTeachers />} />
-      */}
+          <Route path="posts" element={<AdminPost />} />
+
+          <Route path="posts/create" element={<CreatePost />} />
+
         </Route>
         {/* Trang xác thực email */}
         <Route path="/verify-email" element={<VerifyEmail />} />
+
+        {/* Các route dành cho Admin */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="registrations" element={<AdminRegistrations />} />
+        </Route>
+
+        {/* Các route dành cho Học viên (Student Dashboard) */}
+        <Route element={<StudentLayout />}>
+          {/* Dashboard học viên / My Courses */}
+          <Route path="/my-courses" element={<MyCoursesPage />} />
+          {/* Các trang sau sẽ được phát triển sau */}
+        </Route>
+
+        {/* Các route dành cho Giảng viên (Instructor Dashboard) */}
+        <Route element={<InstructorLayout />}>
+          <Route path="/instructor" element={<InstructorDashboardPage />} />
+          <Route path="/instructor/my-class" element={<InstructorClassesPage />} />
+          <Route path="/my-class/create" element={<InstructorCreateClassPage />} />
+          <Route path="/instructor/students" element={<InstructorStudentsPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
