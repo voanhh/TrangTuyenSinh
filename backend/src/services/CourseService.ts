@@ -16,7 +16,7 @@ export class CourseService {
             .leftJoinAndSelect('course.teacher', 'teacher')
             .leftJoinAndSelect('course.registrations', 'registrations')
             .leftJoinAndSelect('course.syllabus', 'syllabus')
-            .where('course.id = :id', { id })
+            .where('course.id = :id', { id })          
             .orderBy('syllabus.orderIndex', 'ASC')
             .getOne();
     }

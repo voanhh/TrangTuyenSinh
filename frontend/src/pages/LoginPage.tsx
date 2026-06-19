@@ -17,7 +17,23 @@ const LoginPage = () => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      navigate('/'); 
+      const userStr = localStorage.getItem('user');
+      let storeUser: any = null;
+      try {
+        storeUser = userStr ? JSON.parse(userStr) : null;
+      } catch {
+        storeUser = null;
+      }
+      // nếu role admin thì chuyển đến admin
+      if (storeUser?.role === 'admin') {
+        navigate('/admin');
+      // nếu role teacher thì chuyển đến instructor
+      } else if (storeUser?.role === 'teacher') {  
+        navigate('/instructor');
+      // nếu role student thì chuyển đến trang chủ
+      } else {
+        navigate('/');
+      }
     }
   }, [navigate]);
 
@@ -45,7 +61,17 @@ const LoginPage = () => {
       localStorage.setItem('accessToken', response.data.accessToken); // Lưu token vào localStorage
       localStorage.setItem('user', JSON.stringify(response.data.user)); // Lưu thông tin user vào localStorage
       alert(response.data.message || 'Đăng nhập thành công!');
-      navigate("/");
+      const role = response.data.user?.role;
+      // viết đường dẫn chuyển hướng đến admin nếu role admin
+      if (role === 'admin') {
+        navigate('/admin');
+      // đường dẫn đến teacher
+      } else if (role === 'teacher') {
+        navigate('/instructor');
+      // đường dẫn đến student
+      } else {
+        navigate('/');
+      }
     } catch (error : any) {
       setErrorMessage(error.response?.data?.message || 'Lỗi kết nối server. Vui lòng thử lại sau.');
     } finally {

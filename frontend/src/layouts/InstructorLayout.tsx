@@ -3,7 +3,9 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Search, Bell, MessageSquare, Menu, X,
     LayoutDashboard, BookOpen, Presentation, Users,
-    FileText, CheckSquare, Award, DollarSign, Settings
+    FileText, CheckSquare, Award, DollarSign, Settings,
+    ArrowLeftRight, KeyRound,
+    LogOut
 } from 'lucide-react';
 const InstructorLayout: React.FC = () => {
     const location = useLocation();
@@ -35,7 +37,7 @@ const InstructorLayout: React.FC = () => {
 
     const navItems = [
         { name: 'Tổng quan', path: '/instructor', icon: <LayoutDashboard size={20} /> },
-        { name: 'Khóa học của tôi', path: '/instructor/courses', icon: <BookOpen size={20} /> },
+        { name: 'Quản lý khóa học', path: '/instructor/courses', icon: <BookOpen size={20} /> },
         { name: 'Quản lý lớp học', path: '/instructor/my-class', icon: <Presentation size={20} /> },
         { name: 'Học viên', path: '/instructor/students', icon: <Users size={20} /> },
         { name: 'Bài tập', path: '/instructor/assignments', icon: <FileText size={20} /> },
@@ -150,7 +152,7 @@ const InstructorLayout: React.FC = () => {
                         </div>
 
                     {/* KHU VỰC HIỂN THỊ TÀI KHOẢN */}
-                    {user ? (
+                
                         <div className="relative group cursor-pointer ml-2">
                             {/* Nút Avatar tròn */}
                             <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg shadow-md border-2 border-white hover:shadow-lg transition-shadow">
@@ -176,25 +178,30 @@ const InstructorLayout: React.FC = () => {
                                     <div className="p-2">
                                         <Link
                                             to="/change-password"
-                                            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-colors font-medium"
+                                            className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-colors font-medium"
                                         >
+                                            <KeyRound size={16} />
                                             Đổi mật khẩu
+                                        </Link>                                        
+                                        <Link
+                                            to="/"
+                                            className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-xl transition-colors font-medium"
+                                        >
+                                            <ArrowLeftRight size={16} />
+                                            Vào màn Học viên
                                         </Link>
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full text-left px-4 py-2.5 text-sm text-orange-600 hover:bg-red-50 rounded-xl transition-colors font-bold mt-1 cursor-pointer"
+                                            className="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-orange-600 hover:bg-red-50 rounded-xl transition-colors font-bold mt-1 cursor-pointer"
                                         >
+                                            <LogOut size={16} />
                                             Đăng xuất
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    ) : (
-                        <div className="auth-group">
-                            <Link to="/login" className="btn btn-outline btn-auth">Đăng nhập</Link>
-                        </div>
-                    )}
+                    
                     </div>
                 </header>
 
