@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Search, Bell, MessageSquare, Menu, X,
     LayoutDashboard, BookOpen, Presentation, Users,
-    FileText, CheckSquare, Award, DollarSign, Settings
+    FileText, CheckSquare, Award, DollarSign, Settings, LogOut
 } from 'lucide-react';
-import { mockInstructorData } from '../data/mockInstructorData';
 
 const InstructorLayout: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { user } = mockInstructorData;
+    const [user, setUser] = useState<any>({});
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    const handleLogout = () => {
+        if (window.confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('user');
+            setUser({});
+            navigate('/login');
+        }
+    };
+
+    const getInitial = (full_name: string) => {
+        if (!full_name) return 'G';
+        const nameArray = full_name.trim().split(' ');
+        const lastName = nameArray[nameArray.length - 1];
+        return lastName.charAt(0).toUpperCase();
+    };
 
     const navItems = [
         { name: 'Tổng quan', path: '/instructor', icon: <LayoutDashboard size={20} /> },
@@ -49,7 +72,7 @@ const InstructorLayout: React.FC = () => {
                     </button>
                 </div>
 
-                <div className="py-6 px-4 overflow-y-auto h-full scrollbar-hide">
+                <div className="py-6 px-4 overflow-y-auto flex-1 scrollbar-hide">
                     <h2 className="text-xs font-bold text-gray-400 tracking-wider mb-4 px-4 uppercase">
                         Giảng Viên
                     </h2>
@@ -83,6 +106,19 @@ const InstructorLayout: React.FC = () => {
                             );
                         })}
                     </nav>
+                </div>
+                
+                {/* Nút Đăng xuất ở đáy Sidebar */}
+                <div className="p-4 border-t border-[#E5E7EB]">
+                    <button 
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all duration-200 text-gray-600 hover:bg-red-50 hover:text-red-600 font-medium text-sm group"
+                    >
+                        <div className="text-gray-400 group-hover:text-red-600">
+                            <LogOut size={20} />
+                        </div>
+                        Đăng xuất
+                    </button>
                 </div>
             </aside>
 
@@ -131,14 +167,20 @@ const InstructorLayout: React.FC = () => {
                         {/* User Avatar & Info */}
                         <div className="pl-2 sm:pl-4 flex items-center cursor-pointer group">
                             <div className="hidden lg:block text-right mr-3">
-                                <p className="text-sm font-bold text-[#1F2937]">{user.name}</p>
+                                <p className="text-sm font-bold text-[#1F2937]">{user.name || user.fullName || "Giảng viên"}</p>
                                 <p className="text-xs text-gray-500">Hồ sơ giảng viên</p>
                             </div>
-                            <img
-                                src={user.avatar}
-                                alt={user.name}
-                                className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-[#E5664B] transition-all object-cover"
-                            />
+                            {user.avatarUrl || user.avatar ? (
+                                <img
+                                    src={user.avatarUrl || user.avatar}
+                                    alt={user.name || user.fullName}
+                                    className="w-10 h-10 rounded-full border-2 border-transparent group-hover:border-[#E5664B] transition-all object-cover"
+                                />
+                            ) : (
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-lg shadow-md border-2 border-transparent group-hover:border-[#E5664B] transition-all">
+                                    {getInitial(user.name || user.fullName)}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
