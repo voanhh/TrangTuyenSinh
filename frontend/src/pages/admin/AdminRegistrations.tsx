@@ -6,6 +6,8 @@ const AdminRegistrations: React.FC = () => {
     const [registrations, setRegistrations] = useState<Registration[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    const [selectedStatus, setSelectedStatus] = useState('all');
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
@@ -15,10 +17,15 @@ const AdminRegistrations: React.FC = () => {
         fetchRegistrations(currentPage);
     }, [currentPage]);
 
-    const fetchRegistrations = async (page: number) => {
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchRegistrations(1, selectedStatus);
+    }, [selectedStatus]);
+
+    const fetchRegistrations = async (page: number, status: string = 'all') => {
         setIsLoading(true);
         try {
-            const result = await registrationApi.getAllRegistrations(page, LIMIT);
+            const result = await registrationApi.getAllRegistrations(page, LIMIT, status);
             setRegistrations(result.data);
             setTotalPages(result.totalPages);
             setTotal(result.total);
@@ -63,10 +70,16 @@ const AdminRegistrations: React.FC = () => {
                         <Search size={18} style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }} />
                         <input type="text" placeholder="Tìm tên, SĐT..." style={{ paddingLeft: '35px' }} />
                     </div>
-                    <select style={{ padding: '8px 16px', border: '1px solid var(--admin-border)', borderRadius: '6px', outline: 'none' }}>
+                    <select
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        style={{ padding: '8px 16px', border: '1px solid var(--admin-border)', borderRadius: '6px', outline: 'none' }}
+                    >
                         <option value="all">Tất cả trạng thái</option>
                         <option value="pending">Chờ xử lý</option>
-                        <option value="paid">Đã thanh toán</option>
+                        <option value="contacted">Đã tư vấn</option>
+                        <option value="confirmed">Đã chốt</option>
+                        <option value="cancelled">Đã hủy</option>
                     </select>
                 </div>
             </div>

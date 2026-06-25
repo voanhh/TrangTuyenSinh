@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Edit, Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { postApi, Post } from '../../services/api';
 
@@ -80,6 +80,7 @@ const AdminPost: React.FC = () => {
                                     <td>{new Date(post.createdAt).toLocaleDateString('vi-VN')}</td>
                                     <td>
                                         <div className="action-buttons">
+                                            <button className="btn-edit" title="Cập nhật trạng thái"><Edit size={16} /></button>
                                             <button className="btn-delete" onClick={() => handleDelete(post.id)}><Trash2 size={16} /></button>
                                         </div>
                                     </td>

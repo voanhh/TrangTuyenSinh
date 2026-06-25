@@ -45,9 +45,7 @@ const AdminLayout: React.FC = () => {
             <div className="admin-main">
                 {/* Header trên cùng */}
                 <header className="admin-header">
-                    <div className="header-search">
-                        <input type="text" placeholder="Tìm kiếm nhanh..." />
-                    </div>
+                    <div className="header-title">Tim anh nhu dang no tung nhung chang biet noi gi voi em</div>
                     <div className="header-user">
                         <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b' }}>
                             <Bell size={20} />
