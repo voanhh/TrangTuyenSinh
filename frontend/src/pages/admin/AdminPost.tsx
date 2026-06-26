@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { postApi, Post } from '../../services/api';
+import { postApi } from '../../services/post.api';
+import type { Post } from '../../services/post.api';
 
 const AdminPost: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);

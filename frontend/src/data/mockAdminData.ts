@@ -1,4 +1,4 @@
-import { Teacher } from '../services/api';
+import type { Teacher } from '../services/teacher.api';
 
 export const mockTeachers: Teacher[] = [
     {

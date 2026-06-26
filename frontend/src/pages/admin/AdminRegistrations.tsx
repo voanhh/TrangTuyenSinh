@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, Mail, Phone, Calendar, Search } from 'lucide-react';
-import { registrationApi, Registration } from '../../services/api';
+import { registrationApi } from '../../services/registration.api';
+import type { Registration } from '../../services/registration.api';
 
 const AdminRegistrations: React.FC = () => {
     const [registrations, setRegistrations] = useState<Registration[]>([]);

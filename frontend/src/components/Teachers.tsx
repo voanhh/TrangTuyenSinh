@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icon nút bấm
-import { teacherApi, Teacher } from '../services/api';
+import { teacherApi } from '../services/teacher.api';
+import type { Teacher } from '../services/teacher.api';
 
 const Teachers: React.FC = () => {
     const [teachers, setTeachers] = useState<Teacher[]>([]);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { postApi, Post } from '../../services/api';
+import { postApi } from '../../services/post.api';
+import type { Post } from '../../services/post.api';
 import Navbar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import './PostList.css';

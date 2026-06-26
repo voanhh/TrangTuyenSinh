@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { courseApi } from '../services/api';
-import { Course } from '../services/api';
+import { courseApi } from '../services/course.api';
+import type { Course } from '../services/course.api';
 
 const Navbar: React.FC = () => {
     const [scrolled, setScrolled] = useState(false);

@@ -3,7 +3,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
 import { Bold, Link, Mail, MapPin, Phone } from 'lucide-react';
-import { courseApi, Course, RegistrationForm, registrationApi } from '../services/api';
+import { courseApi } from '../services/course.api';
+import type { Course } from '../services/course.api';
+import { registrationApi } from '../services/registration.api';
+import type { RegistrationForm } from '../services/registration.api';
 
 const ContactPage: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);
