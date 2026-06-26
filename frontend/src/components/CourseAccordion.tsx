@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { courseApi, Course } from '../services/api';
+import { courseApi } from '../services/course.api';
+import type { Course } from '../services/course.api';
 
 const CourseGrid: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);

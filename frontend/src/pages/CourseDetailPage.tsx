@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 import Footer from '../components/Footer';
-import { courseApi, Course, registrationApi } from '../services/api';
+import { courseApi } from '../services/course.api';
+import type { Course } from '../services/course.api';
+import { registrationApi } from '../services/registration.api';
 import { Clock, Laptop } from 'lucide-react';
-import { RegistrationForm } from '../services/api';
+import type { RegistrationForm } from '../services/registration.api';
 
 const CourseDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();

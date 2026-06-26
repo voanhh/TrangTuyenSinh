@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, UploadCloud, Loader2, ArrowRight, ArrowLeft, Check } from 'lucide-react';
-import { courseApi, teacherApi, uploadApi, Course, Teacher } from '../../services/api';
+import { courseApi } from '../../services/course.api';
+import type { Course } from '../../services/course.api';
+import { teacherApi } from '../../services/teacher.api';
+import type { Teacher } from '../../services/teacher.api';
+import { uploadApi } from '../../services/upload.api';
 
 const AdminCourses: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);

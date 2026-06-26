@@ -21,12 +21,13 @@ app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true // Bật tính năng cho phép trao đổi Cookie giữa FE và BE
 }));
+app.use(cookieParser());
+
 app.use(morgan('dev'));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use("/api/auth", authRoutes) // Đăng ký route cho auth
 app.use(express.static('public'))
-app.use(cookieParser());
 app.set('view engine', 'ejs')
 
 app.use("/api", postRouter)

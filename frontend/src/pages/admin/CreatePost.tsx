@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-import { postApi } from '../../services/api';
+import { postApi } from '../../services/post.api';
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, false] }],
