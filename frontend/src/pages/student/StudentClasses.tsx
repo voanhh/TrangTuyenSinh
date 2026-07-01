@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { 
-    School, Users, Activity, GraduationCap, 
-    Search, ChevronDown, Calendar, Clock, 
+import React, { useEffect, useState } from 'react';
+import {
+    School, Users, Activity, GraduationCap,
+    Search, ChevronDown, Calendar, Clock,
     CheckCircle, PlayCircle, Send, User, MessageCircle
 } from 'lucide-react';
+import { Class, classApi } from '../../services/class.api';
 
 // --- MOCK DATA ---
 const mockData = {
@@ -67,10 +68,31 @@ const mockData = {
     ]
 };
 
+
+
+
 const StudentClasses: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [chatInput, setChatInput] = useState('');
     const [messages, setMessages] = useState(mockData.chatHistory);
+    const [myClasses, setMyClasses] = useState<Class[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const fetchClasses = async () => {
+            try {
+                setIsLoading(true);
+                const data = await classApi.getMyClasses();
+                setMyClasses(data);
+            } catch (err) {
+                console.error("Lỗi khi tải lớp học:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchClasses();
+    }, []);
 
     const statCards = [
         { title: 'Tổng lớp học', value: mockData.statistics.total, icon: <School size={24} />, bg: 'bg-gray-100', color: 'text-gray-700' },
@@ -88,15 +110,15 @@ const StudentClasses: React.FC = () => {
         }
     };
 
-    const filteredClasses = mockData.classes.filter(c => 
-        c.className.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    const filteredClasses = mockData.classes.filter(c =>
+        c.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.courseName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault();
         if (!chatInput.trim()) return;
-        
+
         const newMessage = {
             id: Date.now(),
             sender: 'student',
@@ -104,14 +126,16 @@ const StudentClasses: React.FC = () => {
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             message: chatInput
         };
-        
+
         setMessages([...messages, newMessage]);
         setChatInput('');
     };
 
+    if (isLoading) return <div className="container" style={{ padding: '50px 0', textAlign: 'center' }}>Đang tải danh sách lớp học...</div>;
+
     return (
         <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-8 bg-[#F5F7FA] min-h-screen">
-            
+
             {/* Header Section */}
             <div>
                 <h1 className="text-2xl lg:text-3xl font-bold text-[#1F2937]">Lớp học của tôi</h1>
@@ -147,9 +171,9 @@ const StudentClasses: React.FC = () => {
                 </div>
 
                 <div className="relative w-full md:w-80 group">
-                    <input 
-                        type="text" 
-                        placeholder="Tìm theo tên lớp hoặc khóa học..." 
+                    <input
+                        type="text"
+                        placeholder="Tìm theo tên lớp hoặc khóa học..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 border border-[#E5E7EB] rounded-xl text-sm bg-gray-50 focus:bg-white focus:outline-none focus:border-[#E5664B] focus:ring-2 focus:ring-[#E5664B]/20 transition-all"
@@ -165,9 +189,9 @@ const StudentClasses: React.FC = () => {
                         <div key={cls.id} className="bg-white rounded-[16px] shadow-sm hover:shadow-xl border border-[#E5E7EB] overflow-hidden hover:-translate-y-1.5 transition-all duration-300 group flex flex-col">
                             {/* Thumbnail */}
                             <div className="relative aspect-video overflow-hidden">
-                                <img 
-                                    src={cls.thumbnail} 
-                                    alt={cls.className} 
+                                <img
+                                    src={cls.thumbnail}
+                                    alt={cls.className}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <span className={`absolute top-3 right-3 px-2.5 py-1 rounded-md text-xs font-bold backdrop-blur-md bg-white/95 ${getStatusBadge(cls.status).split(' ')[1]}`}>
@@ -181,7 +205,7 @@ const StudentClasses: React.FC = () => {
                                     {cls.className}
                                 </h3>
                                 <p className="text-sm text-gray-500 mb-4 line-clamp-1">{cls.courseName}</p>
-                                
+
                                 <div className="flex items-center gap-2 mb-4">
                                     <img src={cls.instructor.avatar} alt={cls.instructor.name} className="w-6 h-6 rounded-full" />
                                     <span className="text-sm text-gray-700 font-medium">{cls.instructor.name}</span>
@@ -203,7 +227,7 @@ const StudentClasses: React.FC = () => {
                                         <span className="text-xs font-bold text-[#E5664B]">{cls.progress}%</span>
                                     </div>
                                     <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                                        <div 
+                                        <div
                                             className="bg-[#E5664B] h-1.5 rounded-full transition-all duration-1000 ease-out"
                                             style={{ width: `${cls.progress}%` }}
                                         ></div>
@@ -235,7 +259,7 @@ const StudentClasses: React.FC = () => {
 
             {/* Bottom Widgets Row */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
-                
+
                 {/* 1. Lịch học sắp tới */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#E5E7EB] flex flex-col h-[450px]">
                     <h3 className="text-lg font-bold text-[#1F2937] mb-4 flex items-center gap-2">
@@ -285,23 +309,22 @@ const StudentClasses: React.FC = () => {
                             <div key={msg.id} className={`flex gap-3 ${msg.sender === 'student' ? 'flex-row-reverse' : 'flex-row'}`}>
                                 {/* Avatar */}
                                 <div className="w-8 h-8 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center overflow-hidden border border-white shadow-sm">
-                                    {msg.sender === 'instructor' 
+                                    {msg.sender === 'instructor'
                                         ? <img src="https://ui-avatars.com/api/?name=Tuan+Anh&background=1F2937&color=fff" alt="GV" />
                                         : <User size={16} className="text-gray-500" />
                                     }
                                 </div>
-                                
+
                                 {/* Message Bubble */}
                                 <div className={`flex flex-col max-w-[75%] ${msg.sender === 'student' ? 'items-end' : 'items-start'}`}>
                                     <div className="flex items-baseline gap-2 mb-1">
                                         <span className="text-xs font-bold text-gray-700">{msg.name}</span>
                                         <span className="text-[10px] text-gray-400">{msg.time}</span>
                                     </div>
-                                    <div className={`p-3 rounded-2xl text-sm shadow-sm ${
-                                        msg.sender === 'student' 
-                                            ? 'bg-[#E5664B] text-white rounded-tr-sm' 
+                                    <div className={`p-3 rounded-2xl text-sm shadow-sm ${msg.sender === 'student'
+                                            ? 'bg-[#E5664B] text-white rounded-tr-sm'
                                             : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
-                                    }`}>
+                                        }`}>
                                         {msg.message}
                                     </div>
                                 </div>
@@ -312,15 +335,15 @@ const StudentClasses: React.FC = () => {
                     {/* Chat Input */}
                     <div className="p-4 bg-white border-t border-gray-100 z-10">
                         <form onSubmit={handleSendMessage} className="flex gap-2">
-                            <input 
+                            <input
                                 type="text"
                                 value={chatInput}
                                 onChange={(e) => setChatInput(e.target.value)}
                                 placeholder="Nhập tin nhắn..."
                                 className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:bg-white focus:border-[#E5664B] focus:ring-2 focus:ring-[#E5664B]/20 transition-all"
                             />
-                            <button 
-                                type="submit" 
+                            <button
+                                type="submit"
                                 disabled={!chatInput.trim()}
                                 className="w-10 h-10 rounded-full bg-[#E5664B] text-white flex items-center justify-center flex-shrink-0 hover:bg-[#d6553a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
