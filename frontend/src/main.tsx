@@ -24,7 +24,7 @@ import InstructorLayout from './layouts/InstructorLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import InstructorDashboardPage from './pages/instructor/InstructorDashboardPage';
 import InstructorCoursesPage from './pages/instructor/InstructorCoursesPage';
-import InstructorCourseDetailPage from './pages/instructor/InstructorCourseDetailPage';
+// import InstructorCourseDetailPage from './pages/instructor/InstructorCourseDetailPage';
 import InstructorClassesPage from './pages/instructor/InstructorClassesPage';
 import InstructorCreateClassPage from './pages/instructor/InstructorCreateClassPage';
 import InstructorStudentsPage from './pages/instructor/InstructorStudentsPage';
