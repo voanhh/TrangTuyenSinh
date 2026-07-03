@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { instructorCourseApi } from '../../../../services/api'; 
+import { instructorCourseApi } from '../../../../services/course.api'; 
 import { useCourseStore } from '../store/useCourseStore'; 
 
 export default function CourseSettings() {

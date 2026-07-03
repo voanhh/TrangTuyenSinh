@@ -11,6 +11,8 @@ import {
 import { CourseSyllabus } from './CourseSyllabus';
 import { Registration } from './Registration';
 import { Teacher} from './Teacher';
+import { Class } from './Class';
+
 export enum CourseFormat {
   ONLINE = 'online',
   OFFLINE = 'offline',
@@ -96,5 +98,8 @@ export class Course {
 
   @OneToMany(() => Registration, (registration) => registration.course)
   registrations: Registration[];
+
+  @OneToMany(() => Class, (cls) => cls.course)
+  classes: Class[];
 }
 

@@ -14,7 +14,6 @@ import AdminCourses from './pages/admin/AdminCourses';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
 import AdminPost from './pages/admin/AdminPost';
 import VerifyEmail from './pages/VerifyEmail';
-import InstructorCoursesPage from './pages/instructor/InstructorCoursesPage';
 import CourseEditorPage from './pages/instructor/course-builder/CourseEditorPage';
 import PostList from './pages/Post/PostList';
 import CreatePost from './pages/admin/CreatePost';
@@ -24,6 +23,8 @@ import MyCoursesPage from './pages/student/MyCoursesPage';
 import InstructorLayout from './layouts/InstructorLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import InstructorDashboardPage from './pages/instructor/InstructorDashboardPage';
+import InstructorCoursesPage from './pages/instructor/InstructorCoursesPage';
+import InstructorCourseDetailPage from './pages/instructor/InstructorCourseDetailPage';
 import InstructorClassesPage from './pages/instructor/InstructorClassesPage';
 import InstructorCreateClassPage from './pages/instructor/InstructorCreateClassPage';
 import InstructorStudentsPage from './pages/instructor/InstructorStudentsPage';
@@ -33,6 +34,8 @@ import StudentOrdersCourses from './pages/student/StudentOrdersCourses';
 import StudentSetting from './pages/student/StudentSetting';
 import StudentClasses from './pages/student/StudentClasses';
 import StudentContactInstructor from './pages/student/StudentContactInstructor';
+import StudentSchedulePage from './pages/student/StudentSchedulePage';
+import StudentAnnouncementsPage from './pages/student/StudentAnnouncementsPage';
 import './styles/LandingPage.css';
 function App() {
   return (
@@ -100,6 +103,8 @@ function App() {
           <Route path="/orders" element={<StudentOrdersCourses />} />
           <Route path="/settings" element={<StudentSetting />} />
           <Route path="/classes" element={<StudentClasses />} />
+          <Route path="/schedule" element={<StudentSchedulePage />} />
+          <Route path="/announcements" element={<StudentAnnouncementsPage />} />
           <Route path="/ask-teacher" element={<StudentContactInstructor />} />
         </Route>
         {/* Các trang sau sẽ được phát triển sau */}
@@ -113,6 +118,7 @@ function App() {
           <Route path="/instructor" element={<InstructorDashboardPage />} />
           <Route path="/instructor/courses" element={<InstructorCoursesPage />} />
           <Route path="/instructor/course-builder/:courseId" element={<CourseEditorPage />} />
+          {/* <Route path="/instructor/courses/:id" element={<InstructorCourseDetailPage />} /> */}
           <Route path="/instructor/my-class" element={<InstructorClassesPage />} />
           <Route path="/my-class/create" element={<InstructorCreateClassPage />} />
           <Route path="/instructor/students" element={<InstructorStudentsPage />} />

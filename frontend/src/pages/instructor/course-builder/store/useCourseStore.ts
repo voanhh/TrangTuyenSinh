@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { instructorCourseApi } from '../../../../services/api';  
+import { instructorCourseApi } from '../../../../services/course.api';  
 import Swal from 'sweetalert2';
 
 export interface Lesson {

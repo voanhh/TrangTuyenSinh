@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { instructorCourseApi } from '../../../services/api';
+import { instructorCourseApi } from '../../../services/course.api';
 
 // --- ĐỊNH NGHĨA KIỂU DỮ LIỆU ---
 export interface CourseListItem {

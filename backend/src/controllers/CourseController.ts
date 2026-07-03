@@ -5,12 +5,12 @@ import { successHandler, errorHandler } from '../utils/responseHandler';
 import { AppDataSource } from '../models/DataSource';
 import { Teacher } from '../models/entities/Teacher';
 export class CourseController {
-    static async getAllCoursesPagniation(request: Request, response: Response) {
+    static async getAllCoursesPagination(request: Request, response: Response) {
         const page = Number(request.query.page) || 1;
         const limit = Number(request.query.limit) || 10;
 
         try {
-            const courses = await CourseService.getAllCoursesPagniation(page, limit);
+            const courses = await CourseService.getAllCoursesPagination(page, limit);
             return response.json(successHandler(200, 'Lấy danh sách khóa học thành công', courses));
         }
         catch (error) {
@@ -87,14 +87,13 @@ export class CourseController {
         try {
             const { title } = request.body;
             
-            // 1. Nhận thông tin user từ Token (do Middleware verifyToken gán sang)
+            // 1. Nhận thông tin user từ Token
             const currentUser = (request as any).user;
 
             if (!currentUser) {
                 return response.json(errorHandler(401, 'Vui lòng đăng nhập để thực hiện chức năng này!'));
             }
 
-            // 2. Kiểm tra phân quyền hợp lệ
             if (currentUser.role !== 'teacher' && currentUser.role !== 'admin') {
                 return response.json(errorHandler(403, 'Bạn không có quyền! Chỉ Giảng viên mới được phép tạo khóa học.'));
             }
@@ -103,16 +102,13 @@ export class CourseController {
                 return response.json(errorHandler(400, 'Tên khóa học không được để trống!'));
             }
 
-            // 3. ĐẨY HẾT LOGIC CHO SERVICE: Lấy hoặc tạo hồ sơ Giảng viên
             const teacherProfile = await CourseServiceGV.getOrCreateTeacherProfile(
                 Number(currentUser.id), 
                 currentUser.fullName
             );
 
-            // 4. ĐẨY HẾT LOGIC CHO SERVICE: Tạo bản nháp khóa học bằng ID Giảng viên vừa lấy được
             const newDraft = await CourseServiceGV.createDraft(title, teacherProfile.id);
             
-            // 5. Trả phản hồi về cho Client (Frontend / Postman)
             return response.json(successHandler(201, 'Khởi tạo bản nháp thành công!', newDraft));
 
         } catch (error: any) {

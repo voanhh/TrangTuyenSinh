@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { postApi, Post } from '../../services/api';
+import { postApi } from '../../services/post.api';
+import type { Post } from '../../services/post.api';
 import './PostDetails.css';
 
 const PostDetail = () => {
