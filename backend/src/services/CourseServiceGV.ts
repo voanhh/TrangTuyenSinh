@@ -35,8 +35,26 @@ export class CourseServiceGV {
             where: { teacherId },
             order: { createdAt: 'DESC' }
         });
-        // BE có thể trả về hết, FE sẽ tự gộp, hoặc BE gộp luôn tại đây cho nhẹ tải
-        return allCourses; 
+        const STATUS_PRIORITY: Partial<Record<CourseStatus, number>> = {
+            [CourseStatus.DRAFT]: 2,
+            [CourseStatus.ARCHIVED]: 1,
+        };
+ 
+        const latestByGroup = new Map<string, Course>();
+ 
+        for (const course of allCourses) {
+            if (course.status === CourseStatus.PUBLISHED) continue;
+ 
+            const existing = latestByGroup.get(course.courseGroupId);
+            const weight = STATUS_PRIORITY[course.status] ?? 0;
+            const existingWeight = existing ? (STATUS_PRIORITY[existing.status] ?? 0) : -1;
+ 
+            if (!existing || weight > existingWeight) {
+                latestByGroup.set(course.courseGroupId, course);
+            }
+        }
+ 
+        return Array.from(latestByGroup.values());
     }
     static async getOrCreateTeacherProfile(userId: number, fullName?: string): Promise<Teacher> {
         let teacherProfile = await this.teacherRepository.findOneBy({ id: userId });

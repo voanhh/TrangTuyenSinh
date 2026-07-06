@@ -1,26 +1,26 @@
 import React from 'react';
 import { BookOpen, User, Tag } from 'lucide-react';
-import { CourseListItem } from '../../hooks/useInstructorCourses'; // Cập nhật đường dẫn cho đúng
+import { CourseListItem } from '../../hooks/useInstructorCourses';
 
 // --- ĐỊNH NGHĨA PROPS ---
 interface CourseCardProps {
   course: CourseListItem; // Tái sử dụng Interface từ hook
-  onEdit: (id: string) => void;
-  onPublish: (id: string) => void;
+  onEdit: (courseGroupId: string) => void;
+  onPublish: (courseGroupId: string) => void;
 }
 
 export default function CourseCard({ course, onEdit, onPublish }: CourseCardProps) {
-  const isDraft = course.status === 'DRAFT';
+  const isDraft = course.status === 'draft';
 
   return (
     <div className="flex flex-col bg-white border border-blue-100 shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-shadow group relative">
-      
+
       {/* Huy hiệu Trạng thái */}
       <div className="absolute top-3 right-3 z-10">
         <span className={`px-3 py-1 text-xs font-bold rounded-full shadow-sm ${
-          isDraft ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-gray-600'
+          isDraft ? 'bg-blue-100 text-gray-600' : 'bg-orange-100 text-orange-600'
         }`}>
-          {isDraft ? 'Đang chỉnh sửa' : 'Bản Nháp'}
+          {isDraft ? 'Bản nháp' : course.status === 'archived' ? 'Lưu trữ' : 'Xuất bản'}
         </span>
       </div>
 
@@ -63,13 +63,13 @@ export default function CourseCard({ course, onEdit, onPublish }: CourseCardProp
 
       {/* Nút thao tác */}
       <div className="flex gap-2 p-4 pt-0">
-        <button 
-          onClick={() => onEdit(course.id)}
+        <button
+          onClick={() => onEdit(course.courseGroupId)}
           className="flex-1 py-2.5 text-sm font-bold text-blue-700 bg-blue-50 rounded-xl hover:bg-blue-600 hover:text-white transition-colors cursor-pointer"
         >
           Chỉnh sửa
         </button>
-        <button 
+        <button
           onClick={() => onPublish(course.courseGroupId)}
           className="flex-1 py-2.5 text-sm font-bold text-white bg-orange-500 rounded-xl hover:bg-orange-600 transition-colors cursor-pointer"
         >

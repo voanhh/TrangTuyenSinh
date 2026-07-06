@@ -172,6 +172,7 @@ const ContactPage: React.FC = () => {
             </section>
 
             <Footer />
+            <FloatingContact />
         </div>
         
     );

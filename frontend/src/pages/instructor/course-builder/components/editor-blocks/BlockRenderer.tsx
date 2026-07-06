@@ -1,12 +1,89 @@
 import React from 'react';
 
-// Giữ lại các khối giả như đã bàn
-const TextBlock = () => <div className="p-4 text-slate-500 bg-slate-100 rounded-lg border border-dashed border-slate-300">📝 Khối Văn bản (Đang xây dựng...)</div>;
-const VideoBlock = () => <div className="p-4 text-slate-500 bg-slate-100 rounded-lg border border-dashed border-slate-300">▶️ Khối Video (Đang xây dựng...)</div>;
-const ImageBlock = () => <div className="p-4 text-slate-500 bg-slate-100 rounded-lg border border-dashed border-slate-300">🖼️ Khối Hình ảnh (Đang xây dựng...)</div>;
-const QuizBlock = () => <div className="p-4 text-slate-500 bg-slate-100 rounded-lg border border-dashed border-slate-300">❓ Khối Quiz (Đang xây dựng...)</div>;
+interface BlockComponentProps {
+  data?: any;
+  onChange: (data: any) => void;
+}
 
-const BLOCK_COMPONENTS: Record<string, React.FC<any>> = {
+const TextBlock = ({ data, onChange }: BlockComponentProps) => (
+  <textarea
+    className="w-full min-h-[100px] p-3 text-sm text-slate-700 border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 transition-all resize-y"
+    placeholder="Nhập nội dung cho bài học..."
+    value={data?.content || ''}
+    onChange={(e) => onChange({ ...data, content: e.target.value })}
+  />
+);
+
+const VideoBlock = ({ data, onChange }: BlockComponentProps) => (
+  <div className="space-y-2">
+    <input
+      type="text"
+      className="w-full p-2 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+      placeholder="Dán URL video (YouTube, Video...)"
+      value={data?.url || ''}
+      onChange={(e) => onChange({ ...data, url: e.target.value })}
+    />
+  </div>
+);
+
+const ImageBlock = ({ data, onChange }: BlockComponentProps) => (
+  <div className="space-y-2">
+    <input
+      type="text"
+      className="w-full p-2 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+      placeholder="Dán URL hình ảnh..."
+      value={data?.url || ''}
+      onChange={(e) => onChange({ ...data, url: e.target.value })}
+    />
+    {data?.url && (
+      <img src={data.url} alt="preview" className="max-h-48 rounded-lg border border-slate-100" />
+    )}
+  </div>
+);
+
+const QuizBlock = ({ data, onChange }: BlockComponentProps) => {
+  const question = data?.question || '';
+  const options: string[] = data?.options || ['', '', '', ''];
+  const correctIndex = data?.correctIndex ?? 0;
+
+  const updateOption = (idx: number, value: string) => {
+    const newOptions = [...options];
+    newOptions[idx] = value;
+    onChange({ ...data, question, options: newOptions, correctIndex });
+  };
+
+  return (
+    <div className="space-y-3">
+      <input
+        type="text"
+        className="w-full p-2 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+        placeholder="Nhập câu hỏi..."
+        value={question}
+        onChange={(e) => onChange({ ...data, question: e.target.value, options, correctIndex })}
+      />
+      {options.map((opt, idx) => (
+        <div key={idx} className="flex items-center gap-2">
+          <input
+            type="radio"
+            name={`quiz-correct-${data?.id || 'q'}`}
+            checked={correctIndex === idx}
+            onChange={() => onChange({ ...data, question, options, correctIndex: idx })}
+          />
+          <input
+            type="text"
+            className="flex-1 p-2 text-sm border border-slate-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500 transition-all"
+            placeholder={`Đáp án ${idx + 1}`}
+            value={opt}
+            onChange={(e) => updateOption(idx, e.target.value)}
+          />
+        </div>
+      ))}
+      <p className="text-xs text-slate-400">Chọn ô tròn cạnh đáp án đúng</p>
+    </div>
+  );
+};
+
+const BLOCK_COMPONENTS: Record<string, React.FC<BlockComponentProps>> = {
   text: TextBlock,
   video: VideoBlock,
   image: ImageBlock,
@@ -19,9 +96,11 @@ interface BlockProps {
     type: string;
     data?: any;
   };
+  onUpdateBlock: (data: any) => void;
+  onDeleteBlock: () => void;
 }
 
-export default function BlockRenderer({ block }: BlockProps) {
+export default function BlockRenderer({ block, onUpdateBlock, onDeleteBlock }: BlockProps) {
   const Component = BLOCK_COMPONENTS[block?.type];
 
   if (!Component) {
@@ -31,10 +110,16 @@ export default function BlockRenderer({ block }: BlockProps) {
   return (
     <div className="relative p-4 mb-4 transition-all bg-white border border-blue-100 shadow-sm rounded-xl hover:shadow-md hover:border-orange-300 group">
       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-        <button className="text-slate-400 hover:text-orange-500" title="Xóa khối này">🗑️</button>
+        <button
+          onClick={onDeleteBlock}
+          className="text-slate-400 hover:text-orange-500"
+          title="Xóa khối này"
+        >
+          🗑️
+        </button>
       </div>
-      
-      <Component data={block?.data} />
+
+      <Component data={block?.data} onChange={onUpdateBlock} />
     </div>
   );
 }

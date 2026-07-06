@@ -23,7 +23,7 @@ const InstructorDashboardPage: React.FC = () => {
         user = null;
     }
     const quickActions = [
-        { name: 'Tạo khóa học', icon: <BookOpen size={24} />, bg: 'bg-blue-50', color: 'text-blue-600', link: '/instructor/courses/create' },
+        { name: 'Tạo khóa học', icon: <BookOpen size={24} />, bg: 'bg-blue-50', color: 'text-blue-600', link: '/instructor/courses' },
         { name: 'Tạo lớp học', icon: <School size={24} />, bg: 'bg-orange-50', color: 'text-[#E5664B]', link: '/my-class/create' },
         { name: 'Quản lý học viên', icon: <Users size={24} />, bg: 'bg-emerald-50', color: 'text-emerald-600', link: '/instructor/students' },
         { name: 'Tạo bài kiểm tra', icon: <ClipboardCheck size={24} />, bg: 'bg-purple-50', color: 'text-purple-600', link: '/instructor/quizzes/create' },
