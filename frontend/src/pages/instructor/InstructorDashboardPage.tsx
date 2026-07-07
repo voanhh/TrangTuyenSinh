@@ -11,12 +11,19 @@ import { mockInstructorData } from '../../data/mockInstructorData';
 const InstructorDashboardPage: React.FC = () => {
     const { 
         statistics, classes, upcomingSessions, 
-        recentActivities, user, topCourses, 
+        recentActivities, topCourses, 
         notifications, recentReviews 
     } = mockInstructorData;
 
+    const userStr = localStorage.getItem('user');
+    let user: any = null;
+    try {
+        user = userStr ? JSON.parse(userStr) : null;
+    } catch {
+        user = null;
+    }
     const quickActions = [
-        { name: 'Tạo khóa học', icon: <BookOpen size={24} />, bg: 'bg-blue-50', color: 'text-blue-600', link: '/instructor/courses/create' },
+        { name: 'Tạo khóa học', icon: <BookOpen size={24} />, bg: 'bg-blue-50', color: 'text-blue-600', link: '/instructor/courses' },
         { name: 'Tạo lớp học', icon: <School size={24} />, bg: 'bg-orange-50', color: 'text-[#E5664B]', link: '/my-class/create' },
         { name: 'Quản lý học viên', icon: <Users size={24} />, bg: 'bg-emerald-50', color: 'text-emerald-600', link: '/instructor/students' },
         { name: 'Tạo bài kiểm tra', icon: <ClipboardCheck size={24} />, bg: 'bg-purple-50', color: 'text-purple-600', link: '/instructor/quizzes/create' },
@@ -36,7 +43,7 @@ const InstructorDashboardPage: React.FC = () => {
                 <div className="relative z-10 p-6 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="space-y-4 max-w-2xl">
                         <div>
-                            <h1 className="text-2xl lg:text-3xl font-bold mb-2">Xin chào, {user.name.split(' ').pop()} 👋</h1>
+                            <h1 className="text-2xl lg:text-3xl font-bold mb-2">Xin chào, {user?.fullName?.trim()?.split(' ').pop()} 👋</h1>
                             <p className="text-orange-50 text-sm lg:text-base opacity-90">
                                 Chào mừng bạn quay trở lại hệ thống quản lý giảng dạy. Hôm nay bạn có một vài lịch trình quan trọng!
                             </p>

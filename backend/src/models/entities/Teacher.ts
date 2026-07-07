@@ -24,6 +24,15 @@ export class Teacher {
   @Column({ nullable: true })
   phone: string;
 
+  @Column({ nullable: true})
+  title: string;
+
+  @Column({ nullable: true })
+  experience: string;
+
+  @Column({ nullable: true })
+  company: string;
+
   @Column({ nullable: true })
   specialization: string;
 

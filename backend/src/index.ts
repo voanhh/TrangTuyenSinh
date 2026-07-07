@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './models/DataSource';
-
+import authRouter from './routers/auth.router';
 import 'dotenv/config';
-import authRoutes from './routers/auth.router';
 import cookieParser from 'cookie-parser';
 import userRouter from './routers/user.router';
 import teacherRouter from './routers/teacher.router';
@@ -17,7 +16,6 @@ import scheduleRouter from './routers/schedule.router';
 import classEnrollmentRouter from './routers/classenrollment.router';
 import announcementRouter from './routers/announcement.router';
 
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -30,10 +28,10 @@ app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use("/api/auth", authRoutes) // Đăng ký route cho auth
 app.use(express.static('public'))
 app.set('view engine', 'ejs')
 
+app.use("/api/auth", authRouter)
 app.use("/api", classRouter)
 app.use("/api", scheduleRouter)
 app.use("/api", classEnrollmentRouter)

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { courseApi } from '../services/course.api';
-import type { Course } from '../services/course.api';
+import { courseApi } from '../services/api';
+import { Course } from '../services/api';
+import { ArrowLeftRight, LogOut } from 'lucide-react';
 
 const Navbar: React.FC = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -160,10 +161,11 @@ const Navbar: React.FC = () => {
                                         📚 Khóa học của tôi
                                     </Link>
                                     <button
-                                        onClick={handleLogout}
-                                        className="w-full text-left px-4 py-2.5 text-sm text-orange-600 hover:bg-red-50 rounded-xl transition-colors font-bold mt-1 cursor-pointer"
-                                    >
-                                        Đăng xuất
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center gap-2 text-left px-4 py-2.5 text-sm text-orange-600 hover:bg-red-50 rounded-xl transition-colors font-bold mt-1 cursor-pointer"
+                                        >
+                                            <LogOut size={16} />
+                                            Đăng xuất
                                     </button>
                                 </div>
                             </div>

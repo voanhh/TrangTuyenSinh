@@ -15,6 +15,7 @@ import AdminCourses from './pages/admin/AdminCourses';
 import AdminRegistrations from './pages/admin/AdminRegistrations';
 import AdminPost from './pages/admin/AdminPost';
 import VerifyEmail from './pages/VerifyEmail';
+import CourseEditorPage from './pages/instructor/course-builder/CourseEditorPage';
 import PostList from './pages/Post/PostList';
 import CreatePost from './pages/admin/CreatePost';
 import PostDetail from './pages/Post/PostDetail';
@@ -24,7 +25,7 @@ import InstructorLayout from './layouts/InstructorLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import InstructorDashboardPage from './pages/instructor/InstructorDashboardPage';
 import InstructorCoursesPage from './pages/instructor/InstructorCoursesPage';
-import InstructorCourseDetailPage from './pages/instructor/InstructorCourseDetailPage';
+// import InstructorCourseDetailPage from './pages/instructor/InstructorCourseDetailPage';
 import InstructorClassesPage from './pages/instructor/InstructorClassesPage';
 import InstructorCreateClassPage from './pages/instructor/InstructorCreateClassPage';
 import InstructorStudentsPage from './pages/instructor/InstructorStudentsPage';
@@ -116,7 +117,8 @@ function App() {
         }>
           <Route path="/instructor" element={<InstructorDashboardPage />} />
           <Route path="/instructor/courses" element={<InstructorCoursesPage />} />
-          <Route path="/instructor/courses/:id" element={<InstructorCourseDetailPage />} />
+          <Route path="/instructor/course-builder/:courseId" element={<CourseEditorPage />} />
+          {/* <Route path="/instructor/courses/:id" element={<InstructorCourseDetailPage />} /> */}
           <Route path="/instructor/my-class" element={<InstructorClassesPage />} />
           <Route path="/my-class/create" element={<InstructorCreateClassPage />} />
           <Route path="/instructor/students" element={<InstructorStudentsPage />} />

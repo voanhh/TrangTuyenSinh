@@ -4,6 +4,13 @@ import { Course } from "../models/entities/Course";
 export class CourseService {
     private static courseRepository = AppDataSource.getRepository(Course);
 
+    static async getAllCourses(){
+        return this.courseRepository.find({
+            relations: {registrations: true, teacher: true, syllabus: true},
+            order: { createdAt: 'DESC' },
+        });
+    }
+
     static async getAllCoursesPagination(page: number = 1, limit: number = 10) {
         const [courses, total] = await this.courseRepository.findAndCount({
             relations: { registrations: true, teacher: true, syllabus: true },
@@ -21,20 +28,13 @@ export class CourseService {
         };
     }
 
-    static async getAllCourses() {
-        return this.courseRepository.find({
-            relations: { teacher: true, syllabus: true },
-            order: { createdAt: 'DESC' },
-        });
-    }
-
     static async getCourseById(id: number) {
         return this.courseRepository
             .createQueryBuilder('course')
             .leftJoinAndSelect('course.teacher', 'teacher')
             .leftJoinAndSelect('course.registrations', 'registrations')
             .leftJoinAndSelect('course.syllabus', 'syllabus')
-            .where('course.id = :id', { id })
+            .where('course.id = :id', { id })          
             .orderBy('syllabus.orderIndex', 'ASC')
             .getOne();
     }

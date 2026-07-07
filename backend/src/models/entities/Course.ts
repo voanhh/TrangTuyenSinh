@@ -8,9 +8,9 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Teacher } from './Teacher';
 import { CourseSyllabus } from './CourseSyllabus';
 import { Registration } from './Registration';
+import { Teacher} from './Teacher';
 import { Class } from './Class';
 
 export enum CourseFormat {
@@ -29,6 +29,10 @@ export enum CourseStatus {
 export class Course {
   @PrimaryGeneratedColumn('increment')
   id: number;
+
+  // định danh chung để gom bản draft và public để sau này cập nhật khóa học
+  @Column({ name: 'course_group_id', type: 'varchar', length: 255, nullable: true})
+  courseGroupId: string;
 
   @Column({ name: 'teacher_id' })
   teacherId: number;
@@ -73,21 +77,30 @@ export class Course {
   @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
   price: number;
 
+  @Column({ name: 'discount_price', type: 'decimal', precision: 12, scale: 2, nullable: true})
+  discountPrice: number;
+
   @Column({
     type: 'enum',
     enum: CourseStatus,
     default: CourseStatus.DRAFT,
   })
   status: CourseStatus;
+  
+  @Column({ name: 'course_data', type: 'json', nullable: true })
+  courseData: any;
 
+  @Column({ type: 'json', nullable: true })
+  blocks: any;
+  
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
-
+  
   @ManyToOne(() => Teacher, (teacher) => teacher.courses)
-  @JoinColumn({ name: 'teacher_id' })
+  @JoinColumn({ name : 'teacher_id'})
   teacher: Teacher;
 
   @OneToMany(() => CourseSyllabus, (syllabus) => syllabus.course, {

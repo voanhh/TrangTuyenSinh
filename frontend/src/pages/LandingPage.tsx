@@ -11,10 +11,10 @@ import Teachers from '../components/Teachers';
 import WhyChooseUs from '../components/WhyChooseUs';
 import CTA from '../components/CTA';
 import Footer from '../components/Footer';
-
+import FloatingContact from '../components/FloatingContact';
 const LandingPage: React.FC = () => {
     return (
-        <div className="landing-page-wrapper">
+        <div className="landing-page-wrapper relative">
             <Navbar />
             <Hero />
             <About />
@@ -23,6 +23,7 @@ const LandingPage: React.FC = () => {
             <Teachers />
             <CTA />
             <Footer />
+            <FloatingContact />
         </div>
     );
 };

@@ -7,7 +7,7 @@ import { courseApi } from '../services/course.api';
 import type { Course } from '../services/course.api';
 import { registrationApi } from '../services/registration.api';
 import type { RegistrationForm } from '../services/registration.api';
-
+import FloatingContact from '../components/FloatingContact';
 const ContactPage: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -172,7 +172,9 @@ const ContactPage: React.FC = () => {
             </section>
 
             <Footer />
+            <FloatingContact />
         </div>
+        
     );
 };
 
