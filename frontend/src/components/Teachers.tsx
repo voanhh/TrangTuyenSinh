@@ -16,7 +16,6 @@ const Teachers: React.FC = () => {
             try {
                 setIsLoading(true);
                 const data = await teacherApi.getAllTeachers();
-                console.log(data);
                 setTeachers(data);
             } catch (err) {
                 console.error("Lỗi khi tải danh sách giảng viên:", err);
