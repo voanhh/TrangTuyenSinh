@@ -92,7 +92,7 @@ const Navbar: React.FC = () => {
                             </svg>
                         </span>
 
-                        {/* Dropdown Cặp 1: Danh sách các Category */}
+                        {/* Dropdown Cấp 1: Danh sách các Category */}
                         <ul className="dropdown-menu-c1">
 
                             {/* Cầu nối tàng hình giữ hover giữa nav và dropdown */}

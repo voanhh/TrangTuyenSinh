@@ -87,9 +87,7 @@ function App() {
         </Route>
         {/* Trang xác thực email */}
         <Route path="/verify-email" element={<VerifyEmail />} />
-
-
-
+        
         {/* Các route dành cho Học viên (Student Dashboard) */}
         <Route element={
           <ProtectedRoute allowedRoles={['student']}>

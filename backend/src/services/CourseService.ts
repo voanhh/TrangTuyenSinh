@@ -1,11 +1,12 @@
 import { AppDataSource } from "../models/DataSource";
-import { Course } from "../models/entities/Course";
+import { Course, CourseStatus } from "../models/entities/Course";
 
 export class CourseService {
     private static courseRepository = AppDataSource.getRepository(Course);
 
     static async getAllCourses(){
         return this.courseRepository.find({
+            where: { status: CourseStatus.PUBLISHED },
             relations: {registrations: true, teacher: true, syllabus: true},
             order: { createdAt: 'DESC' },
         });
@@ -13,6 +14,7 @@ export class CourseService {
 
     static async getAllCoursesPagination(page: number = 1, limit: number = 10) {
         const [courses, total] = await this.courseRepository.findAndCount({
+            where : { status: CourseStatus.PUBLISHED },
             relations: { registrations: true, teacher: true, syllabus: true },
             order: { createdAt: 'DESC' },
             take: limit,

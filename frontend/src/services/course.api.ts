@@ -70,6 +70,7 @@ export interface Course {
     classSize?: string;
     format: string;
     price: string;
+    discountPrice?: string;
     status: string;
     teacher: Teacher;
     syllabus: Syllabus[];
