@@ -27,5 +27,6 @@ courseRouter.get('/courses/pagination', CourseController.getAllCoursesPagination
 courseRouter.get('/courses/:id', CourseController.getCourseById);
 courseRouter.post('/courses', verifyToken, isAdmin, upload.single('image'), CourseController.createCourse);
 courseRouter.put('/courses/:id', verifyToken, isAdmin, upload.single('image'), CourseController.updateCourse);
+courseRouter.delete('/courses/:id', verifyToken, isAdmin, CourseController.deleteCourse);
 
 export default courseRouter;

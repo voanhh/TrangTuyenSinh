@@ -77,7 +77,7 @@ const Teachers: React.FC = () => {
                                             className="card-avatar"
                                         />
                                         <h4>{teacher.fullName}</h4>
-                                        <p className="role">{teacher.title} @ {teacher.company}</p>
+                                        <p className="role">{teacher.title} tại {teacher.company}</p>
                                         <p className="exp">Kinh nghiệm: {teacher.experience}</p>
                                         <p style={{ marginTop: '10px' }}>{teacher.bio}</p>
                                     </div>

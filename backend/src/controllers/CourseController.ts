@@ -70,16 +70,16 @@ export class CourseController {
         }
     }
 
-    // static async deleteCourse( request: Request, response: Response) {
-    //     const courseId = Number(request.params.id);
-    //     try {
-    //         await CourseService.deleteCourse(courseId);
-    //         return response.json(successHandler(200, 'Xóa khóa học thành công'));
-    //     }
-    //     catch (error) {
-    //         return response.json(errorHandler(500, 'Lỗi khi xóa khóa học'));
-    //     }
-    // }
+    static async deleteCourse( request: Request, response: Response) {
+        const courseId = Number(request.params.id);
+        try {
+            await CourseService.deleteCourse(courseId);
+            return response.json(successHandler(200, 'Xóa khóa học thành công'));
+        }
+        catch (error) {
+            return response.json(errorHandler(500, 'Lỗi khi xóa khóa học'));
+        }
+    }
 
     // Khởi tạo khóa học cho Giảng viên
     // 1. Tạo bản nháp mới
