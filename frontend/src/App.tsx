@@ -35,6 +35,7 @@ import StudentContactInstructor from './pages/student/StudentContactInstructor';
 import StudentSchedulePage from './pages/student/StudentSchedulePage';
 import StudentAnnouncementsPage from './pages/student/StudentAnnouncementsPage';
 import './styles/LandingPage.css';
+import EditPost from './pages/admin/EditPost';
 function App() {
   return (
     <BrowserRouter>
@@ -81,6 +82,8 @@ function App() {
           <Route path="posts" element={<AdminPost />} />
 
           <Route path="posts/create" element={<CreatePost />} />
+
+          <Route path="posts/edit/:id" element={<EditPost />} />
 
           <Route path="class-students" element={<AdminClassStudents />} />
 
