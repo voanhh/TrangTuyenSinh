@@ -1,51 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Code, Award, GraduationCap, BookOpenCheck, Loader2 } from 'lucide-react';
+import { BookOpen, Loader2 } from 'lucide-react';
 
-// Import các Module con vừa bẻ tách ra
-import { MainCategory, Course } from '../../services/course.api';
+import { Course } from '../../services/course.api';
 import { CatalogNavbar } from './CatalogNavbar';
 import { CatalogSidebar } from './CatalogSidebar';
 import { CourseCard } from './CourseCard';
 import { courseApi } from '../../services/course.api';
-
-// Mảng tĩnh phục vụ dựng giao diện NavBar & Sidebar
-const SIDEBAR_CATEGORIES: MainCategory[] = [
-    { id: 'cpp', name: 'Lập trình C/C++', icon: <Code className="w-4 h-4" />, subCategories: [{ name: 'Nền tảng C++', slug: 'cpp-basic' }, { name: 'C++ Nâng cao & Thuật toán', slug: 'cpp-advance' }] },
-    { id: 'python', name: 'Lập trình Python', icon: <Code className="w-4 h-4" />, subCategories: [{ name: 'Python Cơ bản', slug: 'py-basic' }, { name: 'Python Nâng Cao', slug: 'py-advance' }] },
-    { id: 'tinhockhe', name: 'Ôn thi Tin học trẻ', icon: <Award className="w-4 h-4" />, subCategories: [{ name: 'Bảng A (Tiểu học)', slug: 'thk-a' }, { name: 'Bảng B (THCS)', slug: 'thk-b' }] },
-    { id: 'daihoc', name: 'Ôn thi đại học', icon: <GraduationCap className="w-4 h-4" />, subCategories: [{ name: 'Luyện thi TSA', slug: 'tsa' }, { name: 'Luyện thi HSA', slug: 'hsa' }] },
-    { id: 'thcs', name: 'Lớp 6 - Lớp 9', icon: <BookOpen className="w-4 h-4" />, subCategories: [{ name: 'Toán', slug: 'm69-toan' }, { name: 'Ngữ Văn', slug: 'm69-van' }, { name: 'Tiếng Anh', slug: 'm69-anh' }, { name: 'Vật Lý', slug: 'm1012-ly' },
-            { name: 'Hóa Học', slug: 'm1012-hoa' }, { name: 'Sinh Học', slug: 'm1012-sinh' }] },
-    { id: 'thpt', name: 'Lớp 10 - Lớp 12', icon: <BookOpenCheck className="w-4 h-4" />, subCategories: [{ name: 'Toán', slug: 'm1012-toan' }, { name: 'Ngữ Văn', slug: 'm1012-van' }, { name: 'Tiếng Anh', slug: 'm1012-anh' }, { name: 'Vật Lý', slug: 'm1012-ly' },
-            { name: 'Hóa Học', slug: 'm1012-hoa' }, { name: 'Sinh Học', slug: 'm1012-sinh' }] }
-];
-
-// hàm lọc thanh tìm kiếm
-const removeVietnameseAccents = (str: string) => {
-    if (!str) return '';
-    return str
-        .normalize('NFD') // Tách chữ và dấu
-        .replace(/[\u0300-\u036f]/g, '') // Xóa các dấu
-        .replace(/đ/g, 'd').replace(/Đ/g, 'D') // Xử lý chữ Đ
-        .toLowerCase()
-        .trim();
-};
+import { formatPriceOrFree, formatVND } from '../../utils/format.util';
+import { filterCourses } from '../../utils/search.util';
 
 const CourseCatalogPage: React.FC = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<any>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
-    
-    // State quản lý kết nối DB
+
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Trạng thái điều khiển UI Hover và Responsive Drawer
     const [isCategoryHovered, setIsCategoryHovered] = useState<boolean>(false);
-    const [activeHoverCategory, setActiveHoverCategory] = useState<MainCategory | null>(null);
+    const [activeHoverCategory, setActiveHoverCategory] = useState<string | null>(null);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -56,7 +32,6 @@ const CourseCatalogPage: React.FC = () => {
             try {
                 setIsLoading(true);
                 const data = await courseApi.getAllCourses();
-                // Chỉ lấy khóa học public
                 const activeCourses = data.filter((c: any) => c.status === 'published');
                 setCourses(activeCourses);
             } catch (err) {
@@ -73,64 +48,28 @@ const CourseCatalogPage: React.FC = () => {
         setUser(null);
         navigate('/login');
     };
+    
+    const coursesByCategory = useMemo(() => {
+        return courses.reduce((acc, course) => {
+            const category = course.category || 'Khác';
+            if (!acc[category]) acc[category] = [];
+            acc[category].push(course);
+            return acc;
+        }, {} as Record<string, Course[]>);
+    }, [courses]);
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
-    };
-
-    // logic thanh tìm kiếm và lọc danh mục
-    const filteredCourses = courses.filter(course => {
-        // Xóa dấu câu, in thường
-        const normalizedQuery = removeVietnameseAccents(searchQuery);
-
-        // Nếu không nhập gì, bỏ qua bước tìm kiếm text
-        let matchesSearch = true;
-
-        if (normalizedQuery !== '') {
-            // lấy tên giảng viên
-            const lecturerName = course.user?.fullName || course.teacher?.fullName || '';
-            
-            // giá tiền và giảm giảm
-            const priceStr = course.price?.toString() || '';
-            const discountStr = course.discountPrice?.toString() || '';
-
-            // Gộp tất cả dữ liệu muốn cho phép tìm kiếm vào một chuỗi khổng lồ
-            const searchableText = `
-                ${course.title || ''} 
-                ${course.shortDesc || ''} 
-                ${course.category || ''} 
-                ${lecturerName} 
-                ${priceStr} 
-                ${discountStr}
-            `;
-
-            // Chuẩn hóa chuỗi khổng lồ đó (Xóa dấu, in thường)
-            const normalizedCourseData = removeVietnameseAccents(searchableText);
-
-            // Kiểm tra xem từ khóa có nằm trong chuỗi khổng lồ không
-            matchesSearch = normalizedCourseData.includes(normalizedQuery);
-        }
-
-        // 2. Logic kiểm tra theo Danh mục (Sidebar)
-        const matchesCategory = selectedCategory === 'all' || course.category === selectedCategory;
-
-        // Trả về khóa học thỏa mãn cả 2 điều kiện: Đúng từ khóa VÀ đúng danh mục
-        return matchesSearch && matchesCategory;
-    });
+    const filteredCourses = filterCourses(courses, searchQuery, selectedCategory);
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800 font-sans relative">
-            
-            {/* OVERLAY NỀN TỐI KHI HOVER NAVBAR DESKTOP */}
             <div className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 pointer-events-none ${isCategoryHovered ? 'opacity-100' : 'opacity-0'}`} />
 
-            {/* 1. THANH NAVBAR (HEADER) COMPONENT CHUYÊN BIỆT */}
             <CatalogNavbar 
                 user={user}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 handleLogout={handleLogout}
-                categoryData={SIDEBAR_CATEGORIES}
+                coursesByCategory={coursesByCategory}
                 setSelectedCategory={setSelectedCategory}
                 isCategoryHovered={isCategoryHovered}
                 setIsCategoryHovered={setIsCategoryHovered}
@@ -139,20 +78,17 @@ const CourseCatalogPage: React.FC = () => {
                 onToggleMobileSidebar={() => setIsMobileSidebarOpen(true)}
             />
 
-            {/* BỐ CỤC CHÍNH */}
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col lg:flex-row gap-8 items-start">
-                    
-                    {/* 2. SIDEBAR COMPONENT (TỰ ĐỘNG RESPONSIVE THEO KÍCH THƯỚC MÀN HÌNH) */}
                     <CatalogSidebar 
-                        categoryData={SIDEBAR_CATEGORIES}
+                        coursesByCategory={coursesByCategory}
                         selectedCategory={selectedCategory}
                         setSelectedCategory={setSelectedCategory}
+                        setSearchQuery={setSearchQuery}
                         isOpenMobile={isMobileSidebarOpen}
                         onCloseMobile={() => setIsMobileSidebarOpen(false)}
                     />
 
-                    {/* KHU VỰC KHÓA HỌC BÊN PHẢI */}
                     <div className="flex-1 w-full">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6 pb-4 border-b border-gray-200/60">
                             <div>
@@ -174,13 +110,13 @@ const CourseCatalogPage: React.FC = () => {
                                 <h3 className="text-sm font-bold text-gray-700">Đang đồng bộ dữ liệu khóa học...</h3>
                             </div>
                         ) : filteredCourses.length > 0 ? (
-                            /* 3. LƯỚI CARDS KHÓA HỌC DÙNG COMPONENT ĐƠN NHIỆM */
                             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                                 {filteredCourses.map((course) => (
                                     <CourseCard 
                                         key={course.id} 
                                         course={course} 
-                                        formatPrice={formatPrice} 
+                                        formatVND={formatVND}
+                                        formatPriceOrFree={formatPriceOrFree}
                                     />
                                 ))}
                             </div>
@@ -192,7 +128,6 @@ const CourseCatalogPage: React.FC = () => {
                             </div>
                         )}
                     </div>
-
                 </div>
             </main>
         </div>

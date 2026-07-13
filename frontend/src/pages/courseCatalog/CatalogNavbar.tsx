@@ -1,20 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Layers, ChevronRight, User, LogOut, Menu } from 'lucide-react';
-import { MainCategory } from '../../services/course.api';
+import { Search, Layers, ChevronRight, Menu } from 'lucide-react';
+import { Course } from '../../services/course.api';
 
 interface CatalogNavbarProps {
     user: any;
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     handleLogout: () => void;
-    categoryData: MainCategory[];
+    coursesByCategory: Record<string, Course[]>;
     setSelectedCategory: (catName: string) => void;
     isCategoryHovered: boolean;
     setIsCategoryHovered: (hover: boolean) => void;
-    activeHoverCategory: MainCategory | null;
-    setActiveHoverCategory: (cat: MainCategory | null) => void;
-    onToggleMobileSidebar: () => void; // Event kích hoạt nút 3 gạch mobile
+    activeHoverCategory: string | null;
+    setActiveHoverCategory: (cat: string | null) => void;
+    onToggleMobileSidebar: () => void;
 }
 
 export const CatalogNavbar: React.FC<CatalogNavbarProps> = ({
@@ -22,7 +22,7 @@ export const CatalogNavbar: React.FC<CatalogNavbarProps> = ({
     searchQuery,
     setSearchQuery,
     // handleLogout,
-    categoryData,
+    coursesByCategory,
     setSelectedCategory,
     isCategoryHovered,
     setIsCategoryHovered,
@@ -30,14 +30,20 @@ export const CatalogNavbar: React.FC<CatalogNavbarProps> = ({
     setActiveHoverCategory,
     onToggleMobileSidebar
 }) => {
+    // Click vào 1 khóa học cụ thể (cấp 2) -> tìm kiếm theo tên khóa học đó
+    const handleCourseClick = (courseTitle: string) => {
+        setSelectedCategory('all');
+        setSearchQuery(courseTitle);
+        setIsCategoryHovered(false);
+    };
+
     return (
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20 gap-4">
                     
-                    {/* KHU VỰC TRÁI: NÚT 3 GẠCH (MOBILE) & LOGO */}
+                    {/* NÚT 3 GẠCH (MOBILE) và LOGO */}
                     <div className="flex items-center gap-3 flex-shrink-0">
-                        {/* Nút 3 gạch chỉ xuất hiện trên thiết bị di động < lg */}
                         <button 
                             onClick={onToggleMobileSidebar}
                             className="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
@@ -53,7 +59,7 @@ export const CatalogNavbar: React.FC<CatalogNavbarProps> = ({
                         </Link>
                     </div>
 
-                    {/* KHU VỰC GIỮA: HOVER MENU 2 CẤP (CHỈ HIỂN THỊ TRÊN DESKTOP) */}
+                    {/* HOVER MENU 2 CẤP (CHỈ HIỂN THỊ TRÊN DESKTOP) */}
                     <div className="hidden lg:flex flex-1 justify-center">
                         <div 
                             className="relative py-4"
@@ -68,48 +74,49 @@ export const CatalogNavbar: React.FC<CatalogNavbarProps> = ({
                             </button>
 
                             {isCategoryHovered && (
-                                <div className="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 w-72 bg-white border border-gray-200 shadow-2xl rounded-xl flex overflow-hidden z-50">
-                                    {/* Cấp 1 */}
-                                    <div className="w-full bg-white py-2 border-r border-gray-100">
-                                        {categoryData.map((cat) => (
+                            <div className="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-50">
+                                {/* Wrapper relative chỉ ôm đúng Cấp 1 (w-72) -> vị trí canh giữa
+                                    luôn được tính dựa trên chiều rộng CỐ ĐỊNH này, không đổi khi Cấp 2 xuất hiện */}
+                                <div className="relative w-72">
+                                    {/* Cấp 1 - đứng yên tuyệt đối */}
+                                    <div className="w-72 bg-white border border-gray-200 shadow-2xl rounded-xl py-2">
+                                        {Object.keys(coursesByCategory).map((category) => (
                                             <div
-                                                key={cat.id}
+                                                key={category}
                                                 className="flex items-center justify-between px-4 py-3 hover:bg-orange-50 text-gray-700 hover:text-[#e15f41] font-medium transition-colors cursor-pointer text-sm"
-                                                onMouseEnter={() => setActiveHoverCategory(cat)}
+                                                onMouseEnter={() => setActiveHoverCategory(category)}
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-[#e15f41]">{cat.icon}</span>
-                                                    <span>{cat.name}</span>
+                                                    <Layers className="w-4 h-4 text-[#e15f41]" />
+                                                    <span>{category}</span>
                                                 </div>
                                                 <ChevronRight className="w-4 h-4 opacity-50" />
                                             </div>
                                         ))}
                                     </div>
 
-                                    {/* Cấp 2 */}
+                                    {/* Cấp 2 - absolute neo vào cạnh phải của Cấp 1, KHÔNG ảnh hưởng vị trí Cấp 1 */}
                                     {activeHoverCategory && (
-                                        <div className="absolute left-72 top-0 w-64 h-full bg-gray-50 py-2 shadow-inner border-l border-gray-200">
+                                        <div className="absolute left-full top-0 ml-1.5 w-64 bg-gray-50 border border-gray-200 rounded-xl shadow-2xl py-2">
                                             <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">Chi tiết</div>
-                                            {activeHoverCategory.subCategories.map((sub, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    onClick={() => {
-                                                        setSelectedCategory(activeHoverCategory.name);
-                                                        setIsCategoryHovered(false);
-                                                    }}
-                                                    className="px-4 py-2.5 hover:bg-orange-50 text-gray-600 hover:text-[#e15f41] text-sm transition-colors cursor-pointer font-normal"
+                                            {coursesByCategory[activeHoverCategory].map((course) => (
+                                                <button
+                                                    key={course.id}
+                                                    onClick={() => handleCourseClick(course.title)}
+                                                    className="font-bold block w-full text-left px-4 py-2.5 hover:bg-orange-100 text-gray-600 hover:text-[#e15f41] text-sm transition-colors cursor-pointer"
                                                 >
-                                                    {sub.name}
-                                                </div>
+                                                    {course.title}
+                                                </button>
                                             ))}
                                         </div>
                                     )}
                                 </div>
-                            )}
+                            </div>
+                        )}
                         </div>
                     </div>
 
-                    {/* KHU VỰC PHẢI: TÌM KIẾM*/}
+                    {/* TÌM KIẾM*/}
                     <div className="flex items-center gap-4 flex-shrink-0">
                         <div className="relative w-40 sm:w-48 md:w-64 lg:w-80">
                             <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">

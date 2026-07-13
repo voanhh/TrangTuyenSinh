@@ -7,8 +7,22 @@ export class CourseService {
     static async getAllCourses(){
         return this.courseRepository.find({
             where: { status: CourseStatus.PUBLISHED },
-            relations: {registrations: true, teacher: true, syllabus: true},
-            order: { createdAt: 'DESC' },
+            relations: {teacher: true},
+            select: {
+                id: true,
+                category: true,
+                title: true,
+                shortDesc: true,
+                imageUrl: true,
+                price: true,
+                discountPrice: true,
+                status: true,
+                teacher: {
+                    id: true,
+                    fullName: true,
+                }
+            },
+            order: { createdAt: 'DESC'},
         });
     }
 

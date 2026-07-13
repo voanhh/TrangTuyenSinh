@@ -1,15 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Course } from '../../services/course.api';
+import { formatVND, formatPriceOrFree } from '../../utils/format.util';
 
 interface CourseCardProps {
     course: Course;
-    formatPrice: (price: number) => string;
+    formatVND: (price: number) => string;
+    formatPriceOrFree: (price: number) => string;
 }
 
-export const CourseCard: React.FC<CourseCardProps> = ({ course, formatPrice }) => {
+export const CourseCard: React.FC<CourseCardProps> = ({ course }) => {
     return (
-        <div className="bg-white rounded-2xl border border-gray-200/70 shadow-sm hover:shadow-xl hover:border-orange-200/50 transition-all duration-300 overflow-hidden flex flex-col group">
-            {/* Ảnh đại diện khóa học */}
+        <Link
+            to={`/khoa-hoc/${course.id}`}
+            className="bg-white rounded-2xl border border-gray-200/70 shadow-sm hover:shadow-xl hover:border-orange-200/50 transition-all duration-300 overflow-hidden flex flex-col group"
+        >
             <div className="relative aspect-video w-full bg-gray-50 overflow-hidden">
                 <img 
                     src={course.imageUrl || 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=500'} 
@@ -17,11 +22,6 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, formatPrice }) =
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                 />
-                <div className="absolute top-3 left-3">
-                    <span className="bg-white/90 backdrop-blur-sm text-[#e15f41] text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-orange-100 shadow-sm uppercase tracking-wider">
-                        {course.category || 'Khóa học'}
-                    </span>
-                </div>
             </div>
 
             {/* Thân thẻ nội dung */}
@@ -35,26 +35,32 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, formatPrice }) =
                     </p>
                 </div>
 
-                {/* Phần Chân Card (Giảng viên & Tiền học) */}
+                {/* Phần Chân Card (Giảng viên và Giá tiền) */}
                 <div className="pt-3.5 border-t border-gray-100 flex items-center justify-between gap-2">
                     <div>
                         <div className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Giảng viên</div>
-                        <div className="text-xs font-bold text-blue-600 mt-0.5 truncate max-w-[120px]">
+                        <div className="text-xs font-bold text-orange-600 mt-0.5 truncate max-w-[120px]">
                             {course.user?.fullName || course.teacher?.fullName || 'Đang cập nhật'}
                         </div>
                     </div>
-                    <div className="text-right flex-shrink-0">
+                    <div className="flex flex-col items-end shrink-0">
                         {course.discountPrice ? (
-                            <div className="flex flex-col">
-                                <span className="text-[10px] text-gray-400 line-through">{formatPrice(course.price)}</span>
-                                <span className="text-sm sm:text-base font-black text-[#e15f41]">{formatPrice(course.discountPrice)}</span>
-                            </div>
+                            <>
+                                <span className="text-base font-extrabold text-blue-600 leading-tight whitespace-nowrap">
+                                    {formatVND(course.discountPrice)}
+                                </span>
+                                <span className="text-xs text-slate-400 line-through whitespace-nowrap">
+                                    {formatVND(Number(course.price) || 0)}
+                                </span>
+                            </>
                         ) : (
-                            <span className="text-sm sm:text-base font-black text-[#e15f41]">{formatPrice(course.price)}</span>
+                            <span className="text-base font-extrabold text-orange-600 whitespace-nowrap">
+                                {formatPriceOrFree(Number(course.price) || 0)}
+                            </span>
                         )}
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };

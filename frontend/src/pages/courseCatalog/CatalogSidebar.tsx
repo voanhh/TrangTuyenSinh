@@ -1,26 +1,34 @@
 import React, { useState } from 'react';
-import { ChevronRight, ChevronDown, X } from 'lucide-react';
-import { MainCategory } from '../../services/course.api';
+import { ChevronRight, ChevronDown, X, Layers } from 'lucide-react';
+import { Course } from '../../services/course.api';
 
 interface CatalogSidebarProps {
-    categoryData: MainCategory[];
+    coursesByCategory: Record<string, Course[]>;
     selectedCategory: string;
     setSelectedCategory: (catName: string) => void;
+    setSearchQuery: (query: string) => void;
     isOpenMobile: boolean;           
     onCloseMobile: () => void;
 }
 
 export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
-    categoryData,
+    coursesByCategory,
     selectedCategory,
     setSelectedCategory,
+    setSearchQuery,
     isOpenMobile,
     onCloseMobile
 }) => {
     const [mobileExpandedCat, setMobileExpandedCat] = useState<{ [key: string]: boolean }>({});
 
-    const toggleMobileSub = (catId: string) => {
-        setMobileExpandedCat(prev => ({ ...prev, [catId]: !prev[catId] }));
+    const toggleMobileSub = (category: string) => {
+        setMobileExpandedCat(prev => ({ ...prev, [category]: !prev[category] }));
+    };
+    
+    const handleCourseClick = (courseTitle: string) => {
+        setSelectedCategory('all');
+        setSearchQuery(courseTitle);
+        onCloseMobile();
     };
 
     const SidebarContent = () => (
@@ -35,7 +43,7 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
             <div className="space-y-1.5">
                 {/* Nút Tất cả khóa học */}
                 <button 
-                    onClick={() => { setSelectedCategory('all'); onCloseMobile(); }}
+                    onClick={() => { setSelectedCategory('all'); setSearchQuery(''); onCloseMobile(); }}
                     className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl border text-sm font-bold transition-all cursor-pointer ${
                         selectedCategory === 'all' 
                         ? 'bg-orange-50 border-[#e15f41] text-[#e15f41] shadow-sm' 
@@ -48,12 +56,13 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
                     </div>
                 </button>
 
-                {categoryData.map((cat) => {
-                    const isCurrentActive = selectedCategory === cat.name;
-                    const isMobileOpen = !!mobileExpandedCat[cat.id];
+                {Object.keys(coursesByCategory).map((category) => {
+                    const isCurrentActive = selectedCategory === category;
+                    const isMobileOpen = !!mobileExpandedCat[category];
+                    const coursesInCategory = coursesByCategory[category];
 
                     return (
-                        <div key={cat.id} className="relative group">
+                        <div key={category} className="relative group">
                             
                             <div className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl border text-sm font-semibold transition-all duration-200 ${
                                 isCurrentActive 
@@ -61,18 +70,18 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
                                 : 'bg-white border-gray-100 text-gray-700 hover:bg-orange-50/30 hover:border-gray-200'
                             }`}>
                                 <div 
-                                    onClick={() => { setSelectedCategory(cat.name); onCloseMobile(); }} 
+                                    onClick={() => { setSelectedCategory(category); setSearchQuery(''); onCloseMobile(); }} 
                                     className="flex items-center gap-2.5 flex-1 cursor-pointer select-none truncate"
                                 >
-                                    <div className={isCurrentActive ? 'text-[#e15f41]' : 'text-gray-400'}>{cat.icon}</div>
-                                    <span className="truncate">{cat.name}</span>
+                                    <Layers className={`w-4 h-4 ${isCurrentActive ? 'text-[#e15f41]' : 'text-gray-400'}`} />
+                                    <span className="truncate">{category}</span>
                                 </div>
 
                                 {/* Nút bấm vuông mở rộng cấp 2 */}
                                 <button 
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        toggleMobileSub(cat.id);
+                                        toggleMobileSub(category);
                                     }}
                                     className="w-6 h-6 rounded-md bg-gray-50 flex items-center justify-center border border-gray-100 group-hover:bg-[#e15f41] group-hover:border-[#e15f41] transition-all duration-200 ml-2 cursor-pointer"
                                 >
@@ -85,20 +94,17 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
                                 ${isMobileOpen ? 'block relative left-0 w-full p-2 bg-gray-50 border-x border-b border-gray-100 rounded-b-xl mt-0.5 space-y-1' : 'hidden lg:block'}
                             `}>
                                 <div className="hidden lg:block text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2 pb-1 border-b border-gray-100">
-                                    Lộ trình chi tiết
+                                    Khóa học trong danh mục
                                 </div>
                                 <div className="space-y-1">
-                                    {cat.subCategories.map((sub, idx) => (
-                                        <div
-                                            key={idx}
-                                            onClick={() => {
-                                                setSelectedCategory(cat.name);
-                                                onCloseMobile();
-                                            }}
-                                            className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-600 hover:bg-orange-50 hover:text-[#e15f41] transition-colors cursor-pointer"
+                                    {coursesInCategory.map((course) => (
+                                        <button
+                                            key={course.id}
+                                            onClick={() => handleCourseClick(course.title)}
+                                            className="block w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-gray-600 hover:bg-orange-50 hover:text-[#e15f41] transition-colors cursor-pointer"
                                         >
-                                            {sub.name}
-                                        </div>
+                                            {course.title}
+                                        </button>
                                     ))}
                                 </div>
                             </div>
@@ -117,9 +123,7 @@ export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({
             </div>
 
             <div className={`fixed inset-0 z-50 lg:hidden transition-opacity duration-300 ${isOpenMobile ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-                {/* Lớp nền mờ tối màu */}
                 <div onClick={onCloseMobile} className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-                {/* Khối thanh lọc kéo từ cạnh trái màn hình ra */}
                 <div className={`absolute top-0 left-0 w-72 h-full bg-white shadow-2xl p-4 overflow-y-auto transition-transform duration-300 transform ${isOpenMobile ? 'translate-x-0' : '-translate-x-full'}`}>
                     <SidebarContent />
                 </div>

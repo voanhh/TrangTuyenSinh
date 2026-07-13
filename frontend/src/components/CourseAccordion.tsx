@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Layers } from 'lucide-react';
 import { courseApi } from '../services/course.api';
 import type { Course } from '../services/course.api';
+import { formatVND, formatPriceOrFree } from '../utils/format.util';
 
 const CourseGrid: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -59,9 +60,6 @@ const CourseGrid: React.FC = () => {
         const step = (firstCard?.offsetWidth || 300) + gap;
         el.scrollBy({ left: direction * step, behavior: 'smooth' });
     };
-
-    const formatVND = (value: number) =>
-        new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
 
     if (isLoading) return <div className="max-w-7xl mx-auto py-12 text-center text-slate-500">Đang tải danh sách khóa học...</div>;
     if (error) return <div className="max-w-7xl mx-auto py-12 text-center text-red-500">{error}</div>;
@@ -122,9 +120,7 @@ const CourseGrid: React.FC = () => {
                                         {/* Ảnh tỉ lệ 16:9 */}
                                         <div className="aspect-video bg-orange-50 overflow-hidden">
                                             <img
-                                                src={course.imageUrl}
-                                                alt={course.title}
-                                                className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
+                                                src={course.imageUrl || 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=500'}
                                             />
                                         </div>
 
@@ -132,7 +128,6 @@ const CourseGrid: React.FC = () => {
                                             <h3 className="text-base font-bold text-slate-800 mb-2 line-clamp-2 leading-snug">
                                                 {course.title}
                                             </h3>
-
                                             <p className="text-sm text-slate-500 line-clamp-2 flex-1">
                                                     {course.shortDesc || 'Đang cập nhật mô tả...'}
                                             </p>
@@ -165,7 +160,7 @@ const CourseGrid: React.FC = () => {
                                                         </>
                                                     ) : (
                                                         <span className="text-base font-extrabold text-blue-600 whitespace-nowrap">
-                                                            {Number(course.price) > 0 ? formatVND(Number(course.price)) : 'Miễn phí'}
+                                                            {formatPriceOrFree(Number(course.price) || 0)}
                                                         </span>
                                                     )}
                                                 </div>
