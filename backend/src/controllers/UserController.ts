@@ -38,4 +38,21 @@ export class UserController {
             return response.json(errorHandler(500, 'Lỗi khi xóa người dùng'));
         }
     }
+
+    // Cập nhật thông tin người dùng (tên, số điện thoại, avatarUrl)
+    static async updateProfile(request: Request, response: Response) {
+        try {
+            const currentUser = (request as any).user;
+            if (!currentUser) {
+                return response.json(errorHandler(401, 'Vui lòng đăng nhập'));
+            }
+
+            const { fullName, avatarUrl, phone } = request.body;
+            const updatedUser = await UserService.updateProfile(Number(currentUser.id), { fullName, avatarUrl, phone });
+
+            return response.json(successHandler(200, 'Cập nhật hồ sơ thành công', updatedUser));
+        } catch (error: any) {
+            return response.json(errorHandler(500, error.message || 'Lỗi khi cập nhật hồ sơ'));
+        }
+    }
 }

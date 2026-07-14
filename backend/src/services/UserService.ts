@@ -24,4 +24,29 @@ export class UserService {
         }
         return this.userRepository.remove(user);
     }
+
+    // cập nhật tên, sdt, avatarUrl của User
+    static async updateProfile(userId: number, data: { fullName?: string; avatarUrl?: string; phone?: string }) {
+        const user = await this.userRepository.findOneBy({ id: userId });
+        if (!user) {
+            throw new Error('Người dùng không tồn tại');
+        }
+
+        // Chỉ cập nhật field được gửi lên
+        user.fullName = data.fullName ?? user.fullName;
+        user.avatarUrl = data.avatarUrl ?? user.avatarUrl;
+        user.phone = data.phone ?? user.phone;
+
+        await this.userRepository.save(user);
+
+        // Trả về đúng field cần thiết cho FE
+        return {
+            id: user.id,
+            fullName: user.fullName,
+            email: user.email,
+            phone: user.phone,
+            avatarUrl: user.avatarUrl,
+            role: user.role,
+        };
+    }
 }
