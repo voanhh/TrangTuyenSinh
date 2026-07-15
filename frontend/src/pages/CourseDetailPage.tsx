@@ -389,7 +389,7 @@ const CourseDetailPage: React.FC = () => {
                                     </div>
                                 )}
                             </section>
-
+                            {/* 
                             {course.teacher && (
                                 <section style={{ background: 'white', padding: '30px', borderRadius: '24px', border: '1px solid #E5E7EB', boxShadow: 'var(--shadow-sm)' }}>
                                     <h2 style={{ color: '#1F2937', marginBottom: '20px' }}>Giảng viên hướng dẫn</h2>
@@ -406,7 +406,7 @@ const CourseDetailPage: React.FC = () => {
                                         </div>
                                     </div>
                                 </section>
-                            )}
+                            )} */}
                         </div>
 
                         <div className="course-sidebar" id="course-registration">
