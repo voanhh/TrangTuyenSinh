@@ -16,6 +16,10 @@ export interface Course {
     target: string;
     imageUrl: string;
     duration: string;
+    sessionCount?: number;
+    frequency?: string;
+    lessonDuration?: string;
+    classSize?: string;
     format: string;
     price: string;
     status: string;
@@ -59,5 +63,24 @@ export const courseApi = {
 
     createCourseSyllabus: async (courseId: number, data: { syllabus: unknown[] }) => {
         return apiClient.post(`/courses/${courseId}/syllabi/bulk`, data);
+    },
+};
+
+// gọi api khóa học của giảng viên
+export const instructorCourseApi = {  
+    getLecturerCourses: async () => {
+        return await apiClient.get('/courses/lecturer');
+    },
+    createDraft: async (title: string) => {
+        return await apiClient.post('/courses/draft', { title });
+    },
+    getDraft: async (courseGroupId: string) => {
+        return await apiClient.get(`/courses/draft/${courseGroupId}`);
+    },
+    updateDraft: async (courseGroupId: string, data: any) => {
+        return await apiClient.put(`/courses/draft/${courseGroupId}`, data);
+    },
+    publishCourse: async (courseGroupId: string) => {
+        return await apiClient.post(`/courses/${courseGroupId}/publish`);
     },
 };

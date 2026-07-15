@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, BookOpen, Users, Phone, LogOut, Bell, User, Lock, ChevronDown } from 'lucide-react';
+import { authApi } from '../../services/api';
 
 const AdminLayout: React.FC = () => {
     const navigate = useNavigate();
     const [usersDropdownOpen, setUsersDropdownOpen] = useState(false);
 
-    const handleLogout = () => {
-        localStorage.removeItem('accessToken');
+    const handleLogout = async () => {
+        try {
+            await authApi.logout();
+        } catch (error) {
+            console.error('Không thể gọi API đăng xuất:', error);
+        }
         localStorage.removeItem('user');
         navigate('/login');
     };
@@ -101,11 +106,7 @@ const AdminLayout: React.FC = () => {
                 {/* Header */}
                 <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
                     <div className="flex-1">
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm nhanh..."
-                            className="px-4 py-2 border border-slate-200 rounded-lg w-64 outline-none focus:border-blue-500 transition-colors"
-                        />
+                        <p>Con tim anh nhu dang no tung nhung ma lai chang biet noi gi voi em</p>
                     </div>
                     <div className="flex items-center gap-4">
                         <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-600">

@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Course } from './Course';
 import { Class } from './Class';
+import { Announcement } from './Announcement';
 
 @Entity('teachers')
 export class Teacher {
@@ -22,6 +23,15 @@ export class Teacher {
 
   @Column({ nullable: true })
   phone: string;
+
+  @Column({ nullable: true})
+  title: string;
+
+  @Column({ nullable: true })
+  experience: string;
+
+  @Column({ nullable: true })
+  company: string;
 
   @Column({ nullable: true })
   specialization: string;
@@ -43,4 +53,7 @@ export class Teacher {
 
   @OneToMany(() => Class, (cls) => cls.teacher)
   classes: Class[];
+
+  @OneToMany(() => Announcement, (announcement) => announcement.teacher)
+  announcements: Announcement[];
 }

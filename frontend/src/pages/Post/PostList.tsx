@@ -5,6 +5,7 @@ import type { Post } from '../../services/post.api';
 import Navbar from '../../components/NavBar';
 import Footer from '../../components/Footer';
 import './PostList.css';
+import FloatingContact from '../../components/FloatingContact';
 
 const PostList = () => {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -64,6 +65,7 @@ const PostList = () => {
         </div>
 
         <Footer />
+        <FloatingContact />
     </div>
   );
 };

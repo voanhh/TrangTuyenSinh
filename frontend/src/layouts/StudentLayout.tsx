@@ -3,8 +3,9 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Search, Bell, Heart, ShoppingCart, Menu, X,
     LayoutDashboard, BookOpen, MonitorPlay, Users,
-    Award, Clock, Settings, LogOut, MessageSquare
+    Award, Clock, Settings, LogOut, MessageSquare, CalendarDays
 } from 'lucide-react';
+import { authApi } from '../services/api';
 
 const StudentLayout: React.FC = () => {
     const location = useLocation();
@@ -19,9 +20,13 @@ const StudentLayout: React.FC = () => {
         }
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         if (window.confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-            localStorage.removeItem('accessToken');
+            try {
+                await authApi.logout();
+            } catch (error) {
+                console.error('Không thể gọi API đăng xuất:', error);
+            }
             localStorage.removeItem('user');
             setUser({});
             navigate('/login');
@@ -37,12 +42,13 @@ const StudentLayout: React.FC = () => {
 
     const navItems = [
         { name: 'Tổng quan', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'Khóa học', path: '/my-courses', icon: <BookOpen size={20} /> },
         { name: 'Lớp học', path: '/classes', icon: <MonitorPlay size={20} /> },
-        { name: 'Hội viên', path: '/membership', icon: <Users size={20} /> },
-        { name: 'Chứng nhận', path: '/certificates', icon: <Award size={20} /> },
-        { name: 'Hỏi đáp giáo viên', path: '/ask-teacher', icon: <MessageSquare size={20} /> },
-        { name: 'Lịch sử đơn hàng', path: '/orders', icon: <Clock size={20} /> },
+        { name: 'Lịch học', path: '/schedule', icon: <CalendarDays size={20} /> },
+        { name: 'Thông báo', path: '/announcements', icon: <Bell size={20} /> },
+        // { name: 'Hội viên', path: '/membership', icon: <Users size={20} /> },
+        // { name: 'Chứng nhận', path: '/certificates', icon: <Award size={20} /> },
+        // { name: 'Hỏi đáp giáo viên', path: '/ask-teacher', icon: <MessageSquare size={20} /> },
+        // { name: 'Lịch sử đơn hàng', path: '/orders', icon: <Clock size={20} /> },
         { name: 'Cài đặt tài khoản', path: '/settings', icon: <Settings size={20} /> },
     ];
 

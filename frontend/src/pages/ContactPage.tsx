@@ -7,7 +7,7 @@ import { courseApi } from '../services/course.api';
 import type { Course } from '../services/course.api';
 import { registrationApi } from '../services/registration.api';
 import type { RegistrationForm } from '../services/registration.api';
-
+import FloatingContact from '../components/FloatingContact';
 const ContactPage: React.FC = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -107,7 +107,7 @@ const ContactPage: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="form-group">
+                                {/* <div className="form-group">
                                     <label>Khóa học quan tâm</label>
                                     <select className="form-control" value={formData.courseId}
                                         onChange={(e) => setFormData({ ...formData, courseId: Number(e.target.value) })}>
@@ -117,7 +117,7 @@ const ContactPage: React.FC = () => {
                                         ))}
                                     </select>
 
-                                </div>
+                                </div> */}
 
 
                                 <div className="form-group">
@@ -172,7 +172,9 @@ const ContactPage: React.FC = () => {
             </section>
 
             <Footer />
+            <FloatingContact />
         </div>
+        
     );
 };
 
