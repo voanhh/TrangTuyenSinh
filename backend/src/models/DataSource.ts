@@ -9,6 +9,7 @@ import { Class } from "./entities/Class";
 import { ClassEnrollment } from "./entities/ClassEnrollment";
 import { Schedule } from "./entities/Schedule";
 import { Announcement } from "./entities/Announcement";
+import { Order } from "./entities/Payment";
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -18,5 +19,5 @@ export const AppDataSource = new DataSource({
     password: "123456",
     database: "trangtuyensinh_db",
     synchronize: true,
-    entities: [User, Registration, Course, Teacher, CourseSyllabus, Post, Class, ClassEnrollment, Schedule, Announcement],
+    entities: [User, Registration, Course, Teacher, CourseSyllabus, Post, Class, ClassEnrollment, Schedule, Announcement, Order],
 })

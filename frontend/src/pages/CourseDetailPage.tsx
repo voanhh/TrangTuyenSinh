@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
     AlertCircle,
     ArrowRight,
@@ -20,6 +20,8 @@ import type { Course, Syllabus } from '../services/course.api';
 import { registrationApi } from '../services/registration.api';
 import type { RegistrationForm } from '../services/registration.api';
 import FloatingContact from '../components/FloatingContact';
+import { paymentApi } from '../services/payment.api';
+import type { CoursePaymentOrder } from '../services/payment.api';
 
 const fallbackDifficulties = [
     'Không biết bắt đầu từ đâu, học nhiều nguồn nhưng thiếu một lộ trình rõ ràng.',
@@ -35,10 +37,22 @@ const fallbackSolutions = [
     'Theo dõi tiến độ theo khóa học, lớp học và từng buổi để phụ huynh/học viên dễ nắm bắt.',
 ];
 
+const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        maximumFractionDigits: 0,
+    }).format(value);
+
 const CourseDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
     const [course, setCourse] = useState<Course | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isRegistering, setIsRegistering] = useState<boolean>(false);
+    const [isCreatingPayment, setIsCreatingPayment] = useState<boolean>(false);
+    const [paymentOrder, setPaymentOrder] = useState<CoursePaymentOrder | null>(null);
+    const [paymentError, setPaymentError] = useState<string>('');
 
     const [formData, setFormData] = useState<RegistrationForm>({
         courseId: Number(id),
@@ -62,13 +76,36 @@ const CourseDetailPage: React.FC = () => {
         }
 
         try {
-            setIsLoading(true);
+            setIsRegistering(true);
             await registrationApi.registerForCourse(formData);
             alert('Đăng ký thành công!');
         } catch (error) {
             alert('Đăng ký thất bại, vui lòng thử lại!');
         } finally {
-            setIsLoading(false);
+            setIsRegistering(false);
+        }
+    };
+
+    const handleCreatePayment = async () => {
+        if (!course) return;
+
+        const currentUser = localStorage.getItem('user');
+        if (!currentUser) {
+            alert('Bạn cần đăng nhập để thanh toán.');
+            navigate('/login');
+            return;
+        }
+
+        try {
+            setIsCreatingPayment(true);
+            setPaymentError('');
+            const order = await paymentApi.createCoursePaymentLink(course.id);
+            setPaymentOrder(order);
+        } catch (error: any) {
+            const message = error?.response?.data?.message || 'Không thể tạo thanh toán. Vui lòng thử lại.';
+            setPaymentError(message);
+        } finally {
+            setIsCreatingPayment(false);
         }
     };
 
@@ -95,6 +132,8 @@ const CourseDetailPage: React.FC = () => {
     const sortedSyllabus = useMemo<Syllabus[]>(() => {
         return [...(course?.syllabus || [])].sort((a, b) => a.orderIndex - b.orderIndex);
     }, [course?.syllabus]);
+
+    const finalPrice = useMemo(() => Number(course?.discountPrice ?? course?.price ?? 0), [course]);
 
     const overviewItems = useMemo(() => {
         if (!course) return [];
@@ -412,11 +451,61 @@ const CourseDetailPage: React.FC = () => {
 
                         <div className="course-sidebar" id="course-registration">
                             <div className="registration-box" style={{ background: 'white', padding: '30px', borderRadius: 'var(--radius)', position: 'sticky', top: '100px', boxShadow: 'var(--shadow-lg)' }}>
-                                <h3 style={{ fontSize: '1.8rem', color: 'var(--secondary-color)', marginBottom: '10px' }}>{course.price}</h3>
+                                {course.discountPrice ? (
+                                    <div style={{ marginBottom: '8px' }}>
+                                        <p style={{ margin: 0, textDecoration: 'line-through', color: '#9CA3AF', fontSize: '1rem' }}>
+                                            {formatCurrency(Number(course.price || 0))}
+                                        </p>
+                                        <h3 style={{ fontSize: '1.8rem', color: 'var(--secondary-color)', margin: '4px 0 0' }}>
+                                            {formatCurrency(finalPrice)}
+                                        </h3>
+                                    </div>
+                                ) : (
+                                    <h3 style={{ fontSize: '1.8rem', color: 'var(--secondary-color)', marginBottom: '10px' }}>
+                                        {formatCurrency(finalPrice)}
+                                    </h3>
+                                )}
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '30px', color: 'var(--text-light)' }}>
                                     <span><Clock size={13} height={11} color='#e15f41' /> Thời lượng: <strong>{course.duration}</strong></span>
                                     <span><Laptop size={13} height={11} color='#e15f41' /> Hình thức: <strong>{course.format}</strong></span>
                                 </div>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={handleCreatePayment}
+                                    disabled={isCreatingPayment}
+                                    style={{ width: '100%', marginBottom: '14px' }}
+                                >
+                                    {isCreatingPayment ? 'Đang tạo mã QR...' : 'Thanh toán ngay bằng QR'}
+                                </button>
+
+                                {paymentError && (
+                                    <p style={{ color: '#DC2626', fontSize: '0.9rem', marginBottom: '14px' }}>
+                                        {paymentError}
+                                    </p>
+                                )}
+
+                                {paymentOrder?.qrCode && (
+                                    <div style={{ border: '1px solid #E5E7EB', borderRadius: '14px', padding: '14px', marginBottom: '20px', textAlign: 'center' }}>
+                                        <p style={{ fontSize: '0.85rem', color: '#6B7280', margin: '0 0 10px' }}>
+                                            Quét mã QR để thanh toán
+                                        </p>
+                                        <img
+                                            src={paymentOrder.qrCode}
+                                            alt="PayOS QR"
+                                            style={{ width: '100%', maxWidth: '260px', borderRadius: '10px', marginBottom: '10px' }}
+                                        />
+                                        <p style={{ fontSize: '0.8rem', color: '#6B7280', marginBottom: '10px' }}>
+                                            Mã đơn: <strong>{paymentOrder.orderCode}</strong>
+                                        </p>
+                                        {paymentOrder.checkoutUrl && (
+                                            <a href={paymentOrder.checkoutUrl} target="_blank" rel="noreferrer" className="btn btn-outline" style={{ width: '100%' }}>
+                                                Mở trang thanh toán
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
 
                                 <h4 style={{ marginBottom: '15px' }}>Đăng ký tư vấn khóa học</h4>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -446,10 +535,10 @@ const CourseDetailPage: React.FC = () => {
                                         type="button"
                                         className="btn btn-primary"
                                         onClick={handleSubmit}
-                                        disabled={isLoading}
+                                        disabled={isRegistering}
                                         style={{ width: '100%', marginTop: '10px' }}
                                     >
-                                        {isLoading ? 'Đang xử lý...' : 'Đăng ký ngay'}
+                                        {isRegistering ? 'Đang xử lý...' : 'Đăng ký ngay'}
                                     </button>
                                 </div>
                                 <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', textAlign: 'center', marginTop: '15px' }}>
