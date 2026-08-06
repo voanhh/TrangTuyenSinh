@@ -1,8 +1,8 @@
+import { validateRequiredEnv } from './config/env';
 import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './models/DataSource';
 import authRouter from './routers/auth.router';
-import 'dotenv/config';
 import cookieParser from 'cookie-parser';
 import userRouter from './routers/user.router';
 import teacherRouter from './routers/teacher.router';
@@ -16,6 +16,9 @@ import scheduleRouter from './routers/schedule.router';
 import classEnrollmentRouter from './routers/classenrollment.router';
 import announcementRouter from './routers/announcement.router';
 import uploadRouter from './routers/upload.router';
+import paymentRouter from './routers/payment.router';
+
+validateRequiredEnv();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -43,6 +46,7 @@ app.use("/api", teacherRouter)
 app.use("/api", courseRouter)
 app.use("/api", syllabusRouter)
 app.use("/api", registrationRouter)
+app.use("/api", paymentRouter)
 app.use('/api', userRouter);
 app.use('/api', uploadRouter);
 try {
