@@ -25,6 +25,15 @@ export function getMissingEnvKeys(keys: readonly string[]) {
     });
 }
 
+export function getRequiredEnvValue(key: string): string {
+    const value = process.env[key];
+    if (!value || value.trim() === '') {
+        throw new Error(`Server chưa cấu hình ${key}`);
+    }
+
+    return value.trim();
+}
+
 export function validateRequiredEnv(keys: readonly string[] = REQUIRED_ENV_KEYS) {
     const missingKeys = getMissingEnvKeys(keys);
     if (missingKeys.length > 0) {

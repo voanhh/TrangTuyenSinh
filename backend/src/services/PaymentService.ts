@@ -4,7 +4,7 @@ import { Course, CourseStatus } from '../models/entities/Course';
 import { Order, OrderStatus, PaymentMethod } from '../models/entities/Payment';
 import { Registration, RegistrationStatus } from '../models/entities/Registration';
 import { User } from '../models/entities/User';
-import { getMissingEnvKeys } from '../config/env';
+import { getMissingEnvKeys, getRequiredEnvValue } from '../config/env';
 
 export class PaymentService {
     private static userRepository = AppDataSource.getRepository(User);
@@ -17,23 +17,51 @@ export class PaymentService {
     }
 
     private static get payos() {
-        console.log('[DEBUG] PAYOS_CLIENT_ID:', JSON.stringify(process.env.PAYOS_CLIENT_ID));
-        console.log('[DEBUG] PAYOS_API_KEY:', JSON.stringify(process.env.PAYOS_API_KEY));
-        console.log('[DEBUG] PAYOS_CHECKSUM_KEY:', JSON.stringify(process.env.PAYOS_CHECKSUM_KEY));
-
-        const clientId = process.env.PAYOS_CLIENT_ID;
-        const apiKey = process.env.PAYOS_API_KEY;
-        const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
         const missingKeys = getMissingEnvKeys(['PAYOS_CLIENT_ID', 'PAYOS_API_KEY', 'PAYOS_CHECKSUM_KEY']);
 
         if (missingKeys.length > 0) {
-            throw new Error(`Server chưa cấu hình ${missingKeys.join(' / ')}`);
-        }
-        if (!clientId || !apiKey || !checksumKey) {
-            throw new Error('Server chưa cấu hình PAYOS_CLIENT_ID / PAYOS_API_KEY / PAYOS_CHECKSUM_KEY');
+            throw new Error(this.buildMissingPayOSConfigMessage(missingKeys));
         }
 
+        const clientId = getRequiredEnvValue('PAYOS_CLIENT_ID');
+        const apiKey = getRequiredEnvValue('PAYOS_API_KEY');
+        const checksumKey = getRequiredEnvValue('PAYOS_CHECKSUM_KEY');
+
         return new PayOS({ clientId, apiKey, checksumKey });
+    }
+
+    private static buildMissingPayOSConfigMessage(missingKeys: string[]): string {
+        const keyStatuses = ['PAYOS_CLIENT_ID', 'PAYOS_API_KEY', 'PAYOS_CHECKSUM_KEY']
+            .map((key) => {
+                const value = process.env[key];
+                if (value === undefined) {
+                    return `${key}=undefined`;
+                }
+
+                if (value.trim() === '') {
+                    return `${key}=empty`;
+                }
+
+                return `${key}=set`;
+            })
+            .join(', ');
+
+        return `Server chưa cấu hình ${missingKeys.join(' / ')}. Chi tiết: ${keyStatuses}. Hãy kiểm tra file backend/.env và khởi động lại backend.`;
+    }
+
+    private static toPayOSErrorMessage(error: any): string {
+        const status = error?.response?.status;
+        const apiDescription = error?.response?.data?.desc || error?.response?.data?.message;
+
+        if (status === 401 || status === 403) {
+            return 'PAYOS_CLIENT_ID / PAYOS_API_KEY / PAYOS_CHECKSUM_KEY không hợp lệ hoặc không khớp môi trường PayOS';
+        }
+
+        if (typeof apiDescription === 'string' && apiDescription.trim() !== '') {
+            return `PayOS lỗi: ${apiDescription}`;
+        }
+
+        return error?.message || 'Không thể tạo thanh toán PayOS';
     }
 
     private static async generateUniqueOrderCode(): Promise<string> {
@@ -98,13 +126,18 @@ export class PaymentService {
         const amount = this.getCourseAmount(course);
         const orderCode = await this.generateUniqueOrderCode();
 
-        const payosResponse = await this.payos.paymentRequests.create({
-            orderCode: Number(orderCode),
-            amount,
-            description: this.getCoursePaymentDescription(course.id),
-            returnUrl: `${this.frontendUrl}/khoa-hoc/${course.id}?payment=success`,
-            cancelUrl: `${this.frontendUrl}/khoa-hoc/${course.id}?payment=cancel`,
-        });
+        let payosResponse: any;
+        try {
+            payosResponse = await this.payos.paymentRequests.create({
+                orderCode: Number(orderCode),
+                amount,
+                description: this.getCoursePaymentDescription(course.id),
+                returnUrl: `${this.frontendUrl}/khoa-hoc/${course.id}?payment=success`,
+                cancelUrl: `${this.frontendUrl}/khoa-hoc/${course.id}?payment=cancel`,
+            });
+        } catch (error: any) {
+            throw new Error(this.toPayOSErrorMessage(error));
+        }
 
         const newOrder = new Order();
         newOrder.orderCode = orderCode;
@@ -203,7 +236,12 @@ export class PaymentService {
     }
 
     static async handlePayOSWebhook(payload: unknown) {
-        const webhookData = await this.payos.webhooks.verify(payload as any);
+        let webhookData: any;
+        try {
+            webhookData = await this.payos.webhooks.verify(payload as any);
+        } catch (error: any) {
+            throw new Error(this.toPayOSErrorMessage(error));
+        }
 
         const orderCode = String(webhookData.orderCode);
         const paymentStatusCode = webhookData.code;
