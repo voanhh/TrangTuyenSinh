@@ -35,7 +35,7 @@ const Footer: React.FC = () => {
                     </div>
                 </div>
                 <div className="footer-bottom">
-                    <p>© 2024 EduPro. All rights reserved.</p>
+                    <p>© 2026 EduPro. All rights reserved.</p>
                 </div>
             </div>
         </footer>
