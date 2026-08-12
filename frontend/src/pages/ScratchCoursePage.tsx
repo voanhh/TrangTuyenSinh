@@ -67,7 +67,7 @@ const ScratchCoursePage: React.FC = () => {
                 </div>
             </section>
 
-            {/* MAIN CONTENT & SIDEBAR (Parent-Centric) - Clean & Trustworthy */}
+            {/* MAIN CONTENT và SIDEBAR (Parent-Centric) - Clean và Trustworthy */}
             <section className="py-20 bg-gray-50 flex-grow">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col lg:flex-row gap-10">
