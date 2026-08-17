@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/RegisterPage.css'; // Import file CSS vừa tạo
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -62,62 +61,62 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-100 px-4 font-sans">
+      <div className="bg-white/80 backdrop-blur-2xl rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/50 overflow-hidden max-w-md w-full p-8 transition-all duration-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.15)]">
 
-        <div className="register-header">
-          <h1 className="register-title">Create Your Account</h1>
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-extrabold mb-2 bg-gradient-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">Create Your Account</h1>
         </div>
 
         {errorMessage && (
-          <div className="error-alert">
+          <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm text-center font-medium border border-red-100">
             {errorMessage}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
-            <label className="form-label">Full Name</label>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="block text-sm font-semibold text-gray-700">Full Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Your full name"
-              className="form-input"
+              className="w-full box-border px-4 py-3 rounded-xl bg-gray-50/50 border border-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 focus:bg-white"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Email</label>
+          <div className="flex flex-col gap-1.5">
+            <label className="block text-sm font-semibold text-gray-700">Email</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="email@gmail.com"
-              className="form-input"
+              className="w-full box-border px-4 py-3 rounded-xl bg-gray-50/50 border border-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 focus:bg-white"
               required
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Password</label>
-            <div className="input-wrapper has-icon">
+          <div className="flex flex-col gap-1.5">
+            <label className="block text-sm font-semibold text-gray-700">Password</label>
+            <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                className="form-input"
+                className="w-full box-border px-4 py-3 pr-12 rounded-xl bg-gray-50/50 border border-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 focus:bg-white"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="toggle-password-btn"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 bg-transparent border-none cursor-pointer transition-colors duration-200 flex items-center justify-center hover:text-orange-500 [&>svg]:w-5 [&>svg]:h-5"
               >
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -131,23 +130,25 @@ const RegisterPage = () => {
                 )}
               </button>
             </div>
-          <p className="password-hint">Mật khẩu phải tối thiểu 6 ký tự, gồm chữ hoa và ký tự đặc biệt!</p>          </div>
-          <div className="form-group">
-            <label className="form-label">Confirm Password</label>
-            <div className="input-wrapper has-icon">
+            <p className="text-xs text-gray-500 mt-0.5 mb-0 leading-snug italic">Mật khẩu phải tối thiểu 6 ký tự, gồm chữ hoa và ký tự đặc biệt!</p>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="block text-sm font-semibold text-gray-700">Confirm Password</label>
+            <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm Password"
-                className="form-input"
+                className="w-full box-border px-4 py-3 pr-12 rounded-xl bg-gray-50/50 border border-gray-200 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 focus:bg-white"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="toggle-password-btn"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 bg-transparent border-none cursor-pointer transition-colors duration-200 flex items-center justify-center hover:text-orange-500 [&>svg]:w-5 [&>svg]:h-5"
               >
                 {showConfirmPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -166,15 +167,15 @@ const RegisterPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="submit-btn"
+            className="w-full px-4 py-3.5 text-white font-bold rounded-xl border-none mt-2 cursor-pointer transition-all duration-200 shadow-[0_10px_15px_-3px_rgba(249,115,22,0.3)] bg-gradient-to-r from-orange-500 to-orange-600 enabled:hover:from-orange-600 enabled:hover:to-orange-700 enabled:hover:-translate-y-0.5 disabled:bg-orange-400 disabled:bg-none disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0"
           >
             {isLoading ? 'Signing Up...' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="register-footer">
+        <div className="mt-6 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link to="/login" className="nav-link-underline">
+          <Link to="/login" className="font-bold text-orange-600 no-underline underline-offset-4 transition-colors duration-200 hover:text-orange-700 hover:underline">
             Sign in now
           </Link>
         </div>
