@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { apiClient } from '../services/apiClient';
-import '../styles/LoginPage.css';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -98,12 +97,12 @@ const LoginPage = () => {
   });
 
   return (
-    <div className="login-container">
-      <div className="login-card">
+    <div className="min-h-screen flex items-center justify-center bg-orange-50 px-4">
+      <div className="w-full max-w-md bg-white rounded-3xl p-10 sm:p-12 transition-all duration-300 border border-orange-100 shadow-[0_8px_30px_rgba(249,115,22,0.12)] hover:shadow-[0_8px_40px_rgba(249,115,22,0.2)]">
 
-        <div className="login-header">
-          <h2 className="login-title">Welcome Back!</h2>
-          <p className="login-subtitle">Please sign in to continue</p>
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-3">Welcome Back!</h2>
+          <p className="text-gray-500 text-sm">Please sign in to continue</p>
         </div>
 
         {errorMessage && (
@@ -112,18 +111,18 @@ const LoginPage = () => {
           </div>
         )}
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
 
           <div>
-            <label htmlFor="email" className="form-label">Email</label>
-            <div className="input-wrapper">
+            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">Email</label>
+            <div className="relative">
               <input
                 type="email"
                 id="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="form-input"
+                className="w-full box-border px-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500"
                 placeholder="Your email"
                 required
               />
@@ -131,22 +130,22 @@ const LoginPage = () => {
           </div>
 
           <div>
-            <label htmlFor="password" className="form-label">Password</label>
-            <div className="input-wrapper has-icon">
+            <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">Password</label>
+            <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="form-input"
+                className="w-full box-border px-4 py-3.5 pr-12 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500"
                 placeholder="Password"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="toggle-password-btn"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 text-gray-400 bg-transparent border-none cursor-pointer transition-colors duration-200 flex items-center justify-center hover:text-orange-500 [&>svg]:w-5 [&>svg]:h-5"
               >
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -162,28 +161,28 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="form-actions">
-            <div className="checkbox-wrapper">
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex items-center">
               <input
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="checkbox-input"
+                className="h-4 w-4 rounded border border-gray-300 accent-orange-500 cursor-pointer"
               />
-              <label htmlFor="remember-me" className="checkbox-label">
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer transition-colors duration-200 hover:text-orange-600">
                 Remember me
               </label>
             </div>
-            <Link to="#" className="forgot-password-link">
+            <Link to="#" className="text-sm font-semibold text-orange-500 no-underline transition-colors duration-200 hover:text-orange-600">
               Forgot your password?
             </Link>
           </div>
 
-          <div className="submit-btn-wrapper">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={isLoading}
-              className="submit-btn"
+              className="w-full flex justify-center p-4 border-none rounded-xl text-sm font-bold text-white cursor-pointer transition-all duration-200 shadow-[0_10px_15px_-3px_rgba(249,115,22,0.3)] bg-gradient-to-r from-orange-500 to-orange-600 enabled:hover:from-orange-600 enabled:hover:to-orange-700 enabled:hover:-translate-y-0.5 enabled:active:translate-y-0 disabled:bg-orange-400 disabled:bg-none disabled:cursor-not-allowed disabled:shadow-none"
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </button>
@@ -217,9 +216,9 @@ const LoginPage = () => {
           </button>
         </div>
 
-        <p className="login-footer">
+        <p className="mt-8 text-center text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link to="/register" className="nav-link">
+          <Link to="/register" className="font-bold text-orange-500 no-underline transition-colors duration-200 hover:text-orange-600">
             Sign up now
           </Link>
         </p>
