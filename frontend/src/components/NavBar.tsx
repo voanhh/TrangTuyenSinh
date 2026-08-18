@@ -90,8 +90,8 @@ const Navbar: React.FC = () => {
                     <li><Link to="/lien-he">Liên hệ</Link></li>
                 </ul>
 
-                <div className="nav-actions flex items-center gap-4">
-                    <button className="btn btn-primary">Đăng ký học ngay</button>
+                <div className="nav-actions flex items-center gap-4 list-none">
+                    <li><Link to="/lien-he" className="btn btn-primary">Đăng ký học ngay</Link></li>
 
                     {/* KHU VỰC HIỂN THỊ TÀI KHOẢN */}
                     {user ? (
